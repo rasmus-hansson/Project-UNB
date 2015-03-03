@@ -1,70 +1,76 @@
 <!DOCTYPE html>
 
 <html>
+	<head>
 
-<head>
+		<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+		<title>Spelmotor</title>
+	</head>
 
-<link rel="stylesheet" type="text/css" href="stylesheet.css" />
-<title>Spelmotor</title>
-</head>
-
-<body>
+	<body>
 	
-<h1>Spelmotor</h1>
-<div class="pagetext">
-	<br>
+	<h1>Spelmotor</h1>
+	<div class="pagetext">
+		<br>
 
-<ul>
+		<ul>
 
-<li> Spelmotorns grund går ut på att visa ett eller flera objekt i sekventiell intervall som bildar en runda för spelaren. Spelplanen består av celler där dessa objekt visas. </li>
-<br>
-<li>Spelaren ska i sin tur avgöra om objekten som visas för närvarande matchar objekten som visades för ett förbestämt antal rundor sedan. </li>
-<br>
-<li>När rundan är klar så visas resultatet för spelaren och val finns att spela igen. </li>
-<br>
-<li>
-En konfigurationsfil laddas in och uppdateras varje gång en ny spelrunda påbörjas.
-<br>
-Konfigurationsfilen består av: </li>
-<br>
-<br>
-<ol>
-<li>Tema -> Lista med objekt (t.ex frukt: ananas, päron, äpple, banan, etc.)
-	<br>
-<li>N-Back -> Nummer som bestämmer längden på matchande objekt i sekvens
-<li>Frågor -> Nummer eller antal frågor i rundan
-	<br>
-<li>Positioner -> Antal positioner på spelplanen
-	<br>
-<li>AktivaObjekt -> Hur många av objekten i temat som maximalt kan användas i en runda
-	<br>
-<li>Svar -> Hur många matchningar eller antal rätt spelaren kan ha under en runda
-	<br>
-<li>Visningstid -> Hur många millisekunder ett objekt visas
-	<br>
-<li>Återhämtningstid -> Hur många millisekunder innan nästa objekt visas
+			<li> Spelmotorns grund går ut på att visa ett eller flera objekt i sekventiell intervall som bildar en runda för spelaren. Spelplanen består av celler där dessa objekt visas. </li>
+			<br>
+			<li>Spelaren ska i sin tur avgöra om objekten som visas för närvarande matchar objekten som visades för ett förbestämt antal rundor sedan. </li>
+			<br>
+			<li>När rundan är klar så visas resultatet för spelaren och val finns att spela igen. </li>
+			<br>
+			<li>
+				En konfigurationsfil laddas in och uppdateras varje gång en ny spelrunda påbörjas.
+				<br>
+				Konfigurationsfilen består av: </li>
+				<br>
+				<br>
+				<ol>
+					<li>Tema -> Lista med objekt (t.ex frukt: ananas, päron, äpple, banan, etc.)
+						<br>
+						<li>N-Back -> Nummer som bestämmer längden på matchande objekt i sekvens
+							<li>Frågor -> Nummer eller antal frågor i rundan
+								<br>
+								<li>Positioner -> Antal positioner på spelplanen
+									<br>
+									<li>AktivaObjekt -> Hur många av objekten i temat som maximalt kan användas i en runda
+										<br>
+										<li>Svar -> Hur många matchningar eller antal rätt spelaren kan ha under en runda
+											<br>
+											<li>Visningstid -> Hur många millisekunder ett objekt visas
+												<br>
+												<li>Återhämtningstid -> Hur många millisekunder innan nästa objekt visas
 
-</ol>
-<br>
-<br>
-<li> Nivådesign
-En spelrunda skapas med hjälp av informationen i konfigurationsfilen och presenteras slumpmässigt för spelaren.<br> Ett krav på design för spelnivå bör vara att parametrarna för en runda ska kunna återskapas. </li>
-<br>
-<li> Spel-loopen
-När konfigurationsfil och spelrundan är klar kan spelaren ge kommando för att spelet ska börja.
-<br>
-Då skapas en sk. spel-loop som använder sej av nivådesignen och spelarens input för att förflytta spelet framåt tills dess slut. </li>
-<br>
-<li> Resultatet
-Resultatet visas för spelaren när rundan är klar. </li>
+												</ol>
+												<br>
+												<br>
+												<li> Nivådesign
+													En spelrunda skapas med hjälp av informationen i konfigurationsfilen och presenteras slumpmässigt för spelaren.<br> Ett krav på design för spelnivå bör vara att parametrarna för en runda ska kunna återskapas. </li>
+													<br>
+													<li> Spel-loopen
+														När konfigurationsfil och spelrundan är klar kan spelaren ge kommando för att spelet ska börja.
+														<br>
+														Då skapas en sk. spel-loop som använder sej av nivådesignen och spelarens input för att förflytta spelet framåt tills dess slut. </li>
+														<br>
+														<li> Resultatet
+															Resultatet visas för spelaren när rundan är klar. </li>
 
-<br>
-</ul>
+															<br>
+														</ul>
 
-</div>
+													</div>
 
-<h4><a href="index.html" style="float: right;">Tillbaka</a></h4>
+													<h4><a href="index.html" style="float: right;">Tillbaka</a></h4>
 
-</body>
+		<script>
+			var config = {
+				objects: ['Blue','Red','Green','Orange','Purple','Brown'],
+				questions: 20,
+				answers: 50
+			}
+		</script>
 
+	</body>
 </html>
