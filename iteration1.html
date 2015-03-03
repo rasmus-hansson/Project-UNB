@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+     <title>Iteration 2 150301</title>
+
+<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+</head>
+
+<body>
+	
+
+<p style="font-family: Impact; font-size: 14px">Iteration 1 150217</p>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+..
+
+<h1>Process</h1>
+<div class="pagetext">
+<br>
+<ul>
+
+<li>Skapa och lagra en .cfg-fil som ska kunna innehålla alla valmöjligheterna
+i spelet, i nuläget; </li>
+<br>
+<ol>
+<li> Tema: en enkel lista med objekt (stimuliobjekt?) </li>
+<br>
+<li> N-backnummer: hur många steg bakåt programmet ska gå för att bedöma om
+svaret är riktigt. </li>
+<br>
+<li> Antal frågor i en runda  </li>
+<br>
+<li> Antal positioner (hur många rutor i rutnätet) </li>
+<br>
+<li> Alternativ ? (skrev ingen bra anteckning här) </li>
+<br>
+<li> Hur många olika objekt skall det kunna slumpas mellan
+för respektive stimuli (2 frukter? 10 frukter? osv) </li>
+<br>
+<li> Matchningar / svar (hur många matchningar kommer i en runda egentligen?) </li>
+<br>
+<li> Visningstid / återställningstid per objekt </li>
+</ol>
+</ul>
+
+..
+
+
+<h1>Spelmotor</h1>
+<br>
+
+<ul>
+
+<li> Spelmotorns grund går ut på att visa ett eller flera objekt i sekventiell intervall som bildar en runda för spelaren. Spelplanen består av celler där dessa objekt visas. </li>
+<br>
+<li>Spelaren ska i sin tur avgöra om objekten som visas för närvarande matchar objekten som visades för ett förbestämt antal rundor sedan. </li>
+<br>
+<li>När rundan är klar så visas resultatet för spelaren och val finns att spela igen. </li>
+<br>
+<li>
+En konfigurationsfil laddas in och uppdateras varje gång en ny spelrunda påbörjas.
+<br>
+Konfigurationsfilen består av: </li>
+<br>
+<br>
+<ol>
+<li>Tema -> Lista med objekt (t.ex frukt: ananas, päron, äpple, banan, etc.)
+	<br>
+<li>N-Back -> Nummer som bestämmer längden på matchande objekt i sekvens
+<li>Frågor -> Nummer eller antal frågor i rundan
+	<br>
+<li>Positioner -> Antal positioner på spelplanen
+	<br>
+<li>AktivaObjekt -> Hur många av objekten i temat som maximalt kan användas i en runda
+	<br>
+<li>Svar -> Hur många matchningar eller antal rätt spelaren kan ha under en runda
+	<br>
+<li>Visningstid -> Hur många millisekunder ett objekt visas
+	<br>
+<li>Återhämtningstid -> Hur många millisekunder innan nästa objekt visas
+
+</ol>
+<br>
+<br>
+<li> Nivådesign
+En spelrunda skapas med hjälp av informationen i konfigurationsfilen och presenteras slumpmässigt för spelaren.<br> Ett krav på design för spelnivå bör vara att parametrarna för en runda ska kunna återskapas. </li>
+<br>
+<li> Spel-loopen
+När konfigurationsfil och spelrundan är klar kan spelaren ge kommando för att spelet ska börja.
+<br>
+Då skapas en sk. spel-loop som använder sej av nivådesignen och spelarens input för att förflytta spelet framåt tills dess slut. </li>
+<br>
+<li> Resultatet
+Resultatet visas för spelaren när rundan är klar. </li>
+
+<br>
+</ul>
+
+..
+
+<h1>Gamescreen</h1>
+<br>
+<ul>
+<li> Typ av n-back överst vänstra hörnet</li>
+<br>
+<li> Antal frågor kvar överst högra hörnet</li>
+<br>
+<li> Spelplan mitten</li>
+<br>
+<li> Svarsknappar under spelplanen</li>
+<br>
+<li> Knapp för avstängning ljud / eventuell musik</li>
+<br>
+<li> Knapp för att övergå i lättare game mode eller tutorial</li>
+</ul>
+
+..
+
+<h1>Main screen</h1>
+<ul>
+<br>
+<li> Single player</li>
+<br>
+<li> Multiplayer</li>
+<br>
+<li> Settings</li>
+</ul>
+..
+
+<h1>Single player 1st screen</h1>
+<br>
+<ul>
+<li> Skapa spelare eller välj befintlig</li>
+<br>
+</ul>
+..
+
+<h1>Single player 2nd screen</h1>
+<br>
+<ul>
+<li>Val av n-back (2-back, 3-back osv..)</li>
+<br>
+<li> Möjlighet att övergå i tutorial</li>
+</ul>
+..
+
+<h1>Settings screen (TILLÄGG)</h1>
+<br>
+<ul>
+<li> Single/Dual/Triple/Quadruple N-back</li>
+<br>
+<li> 1-back/2-back/3-back.. osv</li>
+<br>
+<li> Customize stimuli (including number of grids)</li>
+<br>
+<li> Customize number of iterations before round is complete</li>
+<br>
+<li> Sound settings</li>
+<br>
+<li> Credits</li>
+</ul>
+..
+
+<h1>Feedbackvarianter</h1>
+<br>
+<ul>
+
+<li> Problemet med dagens n-back är att hoppet är för stort
+mellan spelnivåer. Leder till frustration och uppgivenhet.
+Små diskreta ökningar av challenge, a.k.a "baby-steps".</li>
+<br>
+<li> Direkt feedback valbart i beginner mode</li>
+<br>
+<li> Feedback i slutet av rundan</li>
+<br>
+<li> Algoritm som kalkylerar nästa rundas svårighetsgrad</li>
+utifrån %-andel rätt svar.
+<br>
+<li> TILLÄGG: olika game modes;
+ 1) Round-based (som de flesta n-back)
+ 2) Time-based
+ 3) Lives-based (efter visst antal fel är man "död")</li>
+<br>
+<li> TILLÄGG: vägledande princip är "short internal measurements",
+a.k.a baby-steps.</li>
+</ul>
+..
+
+<h1>Svårighetsmodulatorer</h1>
+<br>
+<ul>
+<li> Visningstid/återställningstid per objekt/iteration</li>
+<br>
+<li> Antal rutor/positioner</li>
+<br>
+<li> Antal varianter av vald stimuli (2 frukter? 10 frukter?)</li>
+<br>
+<li> Antal matchningar/svar</li>
+<br>
+<li> Rundans längd (antal iterationer)</li>
+<br>
+<li> Fadingalternativ (möjlighet att se föregående rutor
+en stund)</li>
+</ul>
+..
+
+<h1>Designaspekter</h1>
+<br>
+<ul>
+<li> Få och stora knappar</li>
+<br>
+<li> Klassisk design, mer high-end än dagens tillgängliga N-back</li>
+</ul>
+..
+
+<h1>Övriga gameaspekter</h1>
+<br>
+<ul>
+<li> Stor bredd i möjliga stimuli (spelaren ska inte behöva - men kunna -
+gå igenom tusen menyer för att få prova dem, bättre att det slumpas)</li>
+<br>
+<li> Fokus på associativa stimuli (saker som frukter och ord istället för symboler,
+bokstäver, siffror) </li>
+</ul>
+..
+
+<h1>Bästa idéer</h1>
+<br>
+<ul>
+<li> Storlek på spelplan</li>
+<br>
+<li> Handhållning genom fadeing av element</li>
+<br>
+<li> De generaliserbara effekterna av ökad kompetens
+i N-back har klassiskt demonstrerats genom att spelarna
+tar assessments av olika slag.<br> Möjligheten att lägga
+in assessments i vår version av N-back är mycket lockande.</li>
+<br>
+</ul>
+
+..
+
+<h1>Praktiska aspekter och att göra</h1>
+<br>
+<ul>
+<li> Bestämma vad som ska in i första versionen av spelmotorn</li>
+<br>
+<li> Utdelning av rewards - hur lösa? Genom minispel? Assessments?</li>
+<br>
+<li> 2nd iteration att bestämmas per mail, men hyfsat snart</li>
+<br>
+<li> Kodning sker tillsammans</li>
+<br>
+<li> Möjlighet att jobba sida-vid-sida i Sundsvall utreds,
+tidigast nästa torsdag men vilken period som helst torsdag-onsdag
+innefattande en udda helg är möjlig.<br> Resekostnader är
+inget hinder.</li>
+<br>
+<li> Developer licenses tittar vi på längre fram efter vi
+har börjat koda för webbläsare och kört i simulatorer.</li>
+<br>
+<li> Personlig developer license och utgivning till att börja med,
+theymakegames är potentiell om det blir läge att uppgradera
+till företag.</li>
+<br>
+<li> Erik kollar upp personlig domän</li>
+
+
+</ul>
+
+..
+
+
+</div>
+
+
+<h4><a href="index.html" style="float: right;">Tillbaka</a></h4>
+
+</body>
+
+</html>
