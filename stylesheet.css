@@ -87,5 +87,16 @@ img:hover{
 	width: 700px;
 }
 
+li {
+	margin-bottom: 1em;
+}
+
+ul {
+	margin-top: 2em;
+}
+
+ol {
+}
+
 * {
 }
