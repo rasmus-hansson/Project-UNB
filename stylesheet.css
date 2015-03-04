@@ -21,6 +21,15 @@ a:hover {
 	padding: 2px;
 }
 
+.backbutton a:hover {
+	color: red;
+	font-weight: bold;
+	text-decoration: none;
+	margin: auto;
+	text-align: center;
+	padding: 13px;
+}
+
 .buttons{
 }
 
