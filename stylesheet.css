@@ -107,5 +107,15 @@ ul {
 ol {
 }
 
+.gamesquare {
+
+	width: 3em;
+	height: 3em;
+	border: 0.1em black solid;
+	border-radius: 0.5em;
+	position: relative;
+	display: inline-block;
+}
+
 * {
 }
