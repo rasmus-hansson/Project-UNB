@@ -1,3 +1,4 @@
+document.addEventListener('click', clickTrack, false); // Capture all click events
 
 
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
@@ -5,7 +6,10 @@ var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs 
 var x = 1;
 var rounds = 50;
 
-
+// Track only when clicking on certain objects (id in this example)
+function clickTrack (ev) {
+  alert(ev.target.id);
+}
 
 function setColor() {   //function to set color and position, called by var start
 
