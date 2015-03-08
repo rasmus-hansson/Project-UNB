@@ -62,17 +62,58 @@
 			<h4><a href="index.html" style="position: relative; margin-left: 73em;">Tillbaka</a></h4>
 		</div>
 
-<!--Added all the current configuration elements from above-->
+		<!--Added all the current configuration elements from above-->
 		<script>
+
+			var Game = {};
+			Game.run = function (timestamp) {
+				console.log(timestamp);
+			}
+
 			var config = {
 				objects: ['Blue','Red','Green','Orange','Purple','Brown'],
-				questions: 20,
-				answers: 10,
-				positions: 9,
-				nbackLevel: 2,
+				questions: 20, 	// How many objects should appear during the level
+				answers: 10,	// How many of the total questions are matches
+				positions: 9,	// The size of the game board
+				nbackLevel: 2,	// Difficulty
 				activeObjectsNr: 6,
-				showTime: 2000
+				showTime: 2000	// How long each object will be shown
 			}
+
+			var matchLocations = new Array();
+
+			// Set the location of the answers
+			for (i=1;i<config.answers;i++) {
+				if(matchLocations.indexOf(matchLocations[i]) != Math.floor((Math.random() * config.objects.length))) {
+					
+				}
+			}
+
+
+			(function() {
+			  var onEachFrame;
+			  if (window.webkitRequestAnimationFrame) {
+			    onEachFrame = function(cb) {
+			      var _cb = function() { cb(); webkitRequestAnimationFrame(_cb); }
+			      _cb();
+			    };
+			  } else if (window.mozRequestAnimationFrame) {
+			    onEachFrame = function(cb) {
+			      var _cb = function() { cb(); mozRequestAnimationFrame(_cb); }
+			      _cb();
+			    };
+			  } else {
+			    onEachFrame = function(cb) {
+			      setInterval(cb, 1000 / 60);
+			    }
+			  }
+			  
+			  window.onEachFrame = onEachFrame;
+			})();
+
+			window.onEachFrame(Game.run);		
+ 
+
 		</script>
 
 	</body>
