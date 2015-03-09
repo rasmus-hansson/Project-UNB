@@ -17,9 +17,11 @@ for (i=0 ; i<matches ; i++) {
 
   var temproundPos = Math.floor(Math.random() * (rounds - back)) + back; // Random position between back and total rounds
   if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] == undefined ) {
+    // Here we can choose what we want to match; color, position or both
     roundPos[temproundPos] = Math.floor(Math.random() * colors + 1);
     console.log (roundPos[temproundPos]);
   } else if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] != undefined ) {
+    // This part has found a match in n-back position so we simply copy that value forward
     roundPos[temproundPos] = roundPos[temproundPos-back];
     console.log (roundPos[temproundPos]);
   } else {
