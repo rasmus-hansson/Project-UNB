@@ -1,38 +1,67 @@
-document.addEventListener('click', clickTrack, false); // Capture all click events
+document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
 
-var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+//var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
-var x = 1;
+var x = 1; // Keep track of which round we're at
 var rounds = 50;
-var matches = 10;
+var matches = 20;
 var back = 3;
 var roundPos = [];
 var colors = 4;
 
-// This routine attempts to build a round with params from above. It starts by creating positions in the total number of rounds where matches shall occur.
-// When the routine is complete we should be allowed to fill the rest of the rounds with whatever other color we want.
-// The routine will most likely contain bugs and doesn't take position into account.
+// This routine attempts to build a level with params from above.
+// Todo: Check that number of matches is actually what we say
+// Todo: It would be nice to see or track how many iterations were necessary to generate the level
+// Todo: Test edge cases and attempt to break (for example, what to do when adding more or equal matches to rounds)
+//
+var i = 0;
+
+// First create an array of 0
+for (i=0 ; i<rounds ; i++) {
+  roundPos[i] = 0;
+}
+
+// Next, create all the matches
 for (i=0 ; i<matches ; i++) {
 
   var temproundPos = Math.floor(Math.random() * (rounds - back)) + back; // Random position between back and total rounds
-  if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] == undefined ) {
+  if ( roundPos[temproundPos] == 0 && roundPos[temproundPos-back] == 0 ) {
+
     // Here we can choose what we want to match; color, position or both
-    roundPos[temproundPos] = Math.floor(Math.random() * colors + 1);
-    console.log (roundPos[temproundPos]);
-  } else if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] != undefined ) {
-    // This part has found a match in n-back position so we simply copy that value forward
-    roundPos[temproundPos] = roundPos[temproundPos-back];
-    console.log (roundPos[temproundPos]);
+    tempValue = Math.floor(Math.random() * colors + 1);
+    roundPos[temproundPos] = tempValue;
+    roundPos[temproundPos-back] = tempValue;    
   } else {
-    i--; // Don't count this iteration if we cannot find a match position
+
+    i--; // Don't count this iteration if we didn't find a possible match position (this is wasteful stuff tho)
   }
+
+  // Create some output in the console for debugging purposes and fun
+  console.log (roundPos.join(', '));
+  console.log (roundPos.length);
 
 }
 
-console.log (roundPos);
-////////////////////////
+// Last, iterate the level and create all the non-matches as "levelfillers"
+for (i=0 ; i<rounds ; i++) {
+  if ( roundPos[i] == 0) { // only work with the empty 0 positions
+    tempValue = Math.floor(Math.random() * colors + 1);
+    if ( tempValue != roundPos[i-back] && tempValue != roundPos[i+back] ) {
+      roundPos[i] = tempValue;
+    } else {
+      i--;
+    }
+  }
+}
 
+// Create some output in the console for debugging purposes and fun
+  console.log (roundPos.join(', '));
+  console.log (roundPos.length);
+
+//////////////////////// Level Routine End /////////////////////////
+
+// Click Tracking
 // Track only when clicking on certain objects (id in this example)
 function clickTrack (ev) {
   switch (ev.target.id) {
@@ -100,7 +129,7 @@ switch (rand1) {   // I tried a switch-statement for setting color & position in
     default:
   }
 
-console.log('Position ' + gamesquare[rand2].id + ' Color ' + randcol);
+  console.log('Position ' + gamesquare[rand2].id + ' Color ' + randcol);
 
   gamesquare[rand2].style.backgroundColor = randcol;  // sets color and position for square
   x++;                                      // increments x on each loop iteration
