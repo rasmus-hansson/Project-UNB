@@ -5,6 +5,33 @@ var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs 
 
 var x = 1;
 var rounds = 50;
+var matches = 10;
+var back = 3;
+var roundPos = [];
+var colors = 4;
+
+// This routine attempts to build a round with params from above. It starts by creating positions in the total number of rounds where matches shall occur.
+// When the routine is complete we should be allowed to fill the rest of the rounds with whatever other color we want.
+// The routine will most likely contain bugs and doesn't take position into account.
+for (i=0 ; i<matches ; i++) {
+
+  var temproundPos = Math.floor(Math.random() * (rounds - back)) + back; // Random position between back and total rounds
+  if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] == undefined ) {
+    // Here we can choose what we want to match; color, position or both
+    roundPos[temproundPos] = Math.floor(Math.random() * colors + 1);
+    console.log (roundPos[temproundPos]);
+  } else if ( roundPos[temproundPos] == undefined && roundPos[temproundPos-back] != undefined ) {
+    // This part has found a match in n-back position so we simply copy that value forward
+    roundPos[temproundPos] = roundPos[temproundPos-back];
+    console.log (roundPos[temproundPos]);
+  } else {
+    i--; // Don't count this iteration if we cannot find a match position
+  }
+
+}
+
+console.log (roundPos);
+////////////////////////
 
 // Track only when clicking on certain objects (id in this example)
 function clickTrack (ev) {
