@@ -3,44 +3,46 @@ document.addEventListener('click', clickTrack, false); // Capture all click even
 
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
+var levelArr = []; // Multidimensional array that will be used as the game level with parameters from config
 var x = 0; // Keep track of which round we're at
-var rounds = 50;
-var matches = 20;
-var back = 3;
-var levelArr = [];
+var rounds = 50; // Number of rounds in the game
+var back = 3; // Difficulty modulator
 var colors = ['red','green','orange','yellow'];
-var board = 8;
+var board = 8; // Number of pieces on the board (strangely from 0)
 
 // The idea of this section is to improve the level generator to include
 // color matching, position matching and thirdly a match of all Stimuli 
 // (in this case a combination of color and position)
-// If we decide to use it, we will need to replace the
-// above matches var and modify the routine below accordingly
+// The level generator will try to create a random level based on the params below
 //
-//
-var colMatches = 0.3;
-var posMatches = 0.4;
-var allMatches = 0.2;
+var colMatches = 0.3; // Percentage of rounds that will be color matched
+var posMatches = 0.4; // Percentage of rounds that will be position matched
+var allMatches = 0.2; // Percentage of rounds that will be all matching (both color and position)
 
-var totalPosMatches = Math.round(rounds * posMatches) / 2;
-var totalColMatches = Math.round(rounds * colMatches) / 2;
-var totalAllMatches = Math.round(rounds * allMatches) / 2;
 var totalMatches = Math.round(rounds * (colMatches + posMatches + allMatches));
+
+var totalPosMatches = Math.round(rounds * posMatches);
+var totalColMatches = Math.round(rounds * colMatches);
+var totalAllMatches = Math.round(rounds * allMatches);
+
   
+  // These will probably be hidden due to all the iteration counting going on below... Anyway, we will fix
   console.log ('Color matches ' + totalColMatches);
   console.log ('Position matches ' + totalPosMatches);
   console.log ('All matches ' + totalAllMatches);
   console.log ('Total matches ' + totalMatches);
 
-// First create an array full of nulls
+// First create an array full of nulls to initialize the level.
+// This is needed because we need to check every position against certain conditions.
 for (i=0 ; i<rounds ; i++) {
   levelArr[i] = null;
 }
 
+// For debugging and optimization purupose we use a total iteration counter
 var iterationCounter = 0;
 
-// Next iterate over the amount of allMatches
-for (i=0 ; i<totalAllMatches ; i++) {
+// Next try to find an empty spot for all AllMatches
+for (i=0 ; i<totalAllMatches/2 ; i++) {
   
   // Random position for a match
   var rndMatch = Math.floor(Math.random() * (rounds - back)) + back;  
@@ -74,7 +76,7 @@ console.log ('Total iterations ' + iterationCounter);
 
 
 // Next iterate over the amount of allPositions
-for (i=0 ; i<totalPosMatches ; i++) {
+for (i=0 ; i<totalPosMatches/2 ; i++) {
 
   // Try to find random position for a match
   var rndMatch = Math.floor(Math.random() * (rounds - back)) + back;
@@ -82,7 +84,7 @@ for (i=0 ; i<totalPosMatches ; i++) {
   if (levelArr[rndMatch] == null && levelArr[rndMatch-back] == null ) {
 
     // Generate random matching values
-    var rndCol = Math.floor(Math.random() * colors.length);
+    var rndCol = Math.floor(Math.random() * colors.length); 
     var rndPos = Math.floor(Math.random() * board + 1);
     var secCol = 0;
 
@@ -112,7 +114,7 @@ console.log ('Total iterations ' + iterationCounter);
 
 
 // Next iterate over the amount of allColors
-for (i=0 ; i<totalColMatches ; i++) {
+for (i=0 ; i<totalColMatches/2 ; i++) {
 
   // Try to find random position for a match
   var rndMatch = Math.floor(Math.random() * (rounds - back)) + back;
@@ -126,8 +128,8 @@ for (i=0 ; i<totalColMatches ; i++) {
 
     // This is currently a hack. We need to 
     // get a proper random number that doesn't match the first random number
-    if (rndPos > 4) secPos = rndPos - 2;
-    else secCol = rndPos + 2;
+    if (rndPos > 2) secPos = rndPos - 1;
+    else secCol = rndPos + 1;
 
     // Insert both color and position at match location and match-back location
     levelArr[rndMatch] = [rndCol, rndPos];
@@ -159,10 +161,46 @@ for (i=0 ; i<levelArr.length ; i++) {
     if (levelArr[i] == null) {
       if (i < back) { // If the empty slot is in the beginning we need to make sure there isn't a match forward (todo currently unsafe hack)
         var tmpValues = levelArr[i+back];
-        levelArr[i] = [tmpValues[0]+1,tmpValues[1]+1];
-      } else { // If the empty slot is later we need to make sure there isn't a match forward and backward (todo, currntly unsafe hack)
+
+        do {
+          var tmpCol = Math.floor(Math.random() * colors.length);
+        } while (tmpCol == tmpValues[0]);
+
+        do {
+          var tmpPos = Math.floor(Math.random() * board + 1); 
+        } while (tmpPos == tmpValues[1]);
+
+        levelArr[i] = [tmpCol,tmpPos];
+      
+      } else if (i > (levelArr.length - back)) {
+
         var tmpValues = levelArr[i-back];
-        levelArr[i] = [tmpValues[0]+1, tmpValues[1]+1];
+
+        do {
+          var tmpCol = Math.floor(Math.random() * colors.length);
+        } while (tmpCol == tmpValues[0]);
+
+        do {
+          var tmpPos = Math.floor(Math.random() * board + 1); 
+        } while (tmpPos == tmpValues[1]);
+
+        levelArr[i] = [tmpCol,tmpPos];
+
+      } else { // If the empty slot is later we need to make sure there isn't a match forward and backward
+        var tmpValuesB = levelArr[i-back];
+        var tmpValuesF = levelArr[i+back];
+
+        do {
+          var tmpCol = Math.floor(Math.random() * colors.length);
+        } while (tmpCol == tmpValuesB[0] || tmpCol == tmpValuesF[0]);
+
+        do { // These guys are apparently dangeours and can freeze the script because of endless loop.
+             // It basically means that with the config params we supply there is no non-matching option.
+             // How we solve is a great mystery waiting to unfold
+          var tmpPos = Math.floor(Math.random() * colors.length);
+        } while (tmpPos == tmpValuesB[1] || tmpCol == tmpValuesF[1]);
+
+        levelArr[i] = [tmpCol,tmpPos]; 
       }
     }
 
