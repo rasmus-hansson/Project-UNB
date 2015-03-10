@@ -38,7 +38,10 @@ var totalMatches = Math.round(rounds * (colMatches + posMatches + allMatches));
 
 // This routine attempts to build a level with params from above.
 // Todo: Check that number of matches is actually what we say
-// Todo: It would be nice to see or track how many iterations were necessary to generate the level
+// Todo: It would be nice to see or track how many (extra) iterations were necessary to generate the level
+// Todo: It seems that the routine sometimes get stuck which probably means there is no possibility to generate
+// the filler value becuase of how the matches are composed. If so we will probably have to rewrite the level 
+// where it gets stuck...
 // Todo: Test edge cases and attempt to break (for example, what to do when adding more or equal matches to rounds)
 // 
 //
@@ -85,11 +88,13 @@ for (i=0 ; i<rounds ; i++) {
       i--; // Don't count this iteration if we didn't find a possible match position (this is wasteful stuff tho)
 
     }
+    // Create some output in the console for debugging purposes and fun
+    console.log (levelArr.join(', '));  
   }
 }
 
 // Create some output in the console for debugging purposes and fun
-  console.log (levelArr.join(', '));
+  //console.log (levelArr.join(', '));
   console.log (levelArr.length);
 
 //////////////////////// Level Routine End /////////////////////////
