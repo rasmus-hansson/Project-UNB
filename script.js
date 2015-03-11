@@ -4,10 +4,11 @@ document.addEventListener('click', clickTrack, false); // Capture all click even
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
 var levelArr = []; // Multidimensional array that will be used as the game level with parameters from config
+var answerArr = []; // Keeping track of all the answers here
 var x = 0; // Keep track of which round we're at
-var rounds = 50; // Number of rounds in the game
-var back = 3; // Difficulty modulator
-var colors = ['purple','green','orange','yellow','pink','blue','aqua'];
+var rounds = 10; // Number of rounds in the game
+var back = 1; // Difficulty modulator
+var colors = ['Purple','Green','Orange','Yellow'];
 var board = 9; // Number of pieces on the board (strangely from 0)
 
 // The idea of this section is to improve the level generator to include
@@ -213,13 +214,36 @@ console.log (levelArr.join(', '));
 function clickTrack (ev) {
   switch (ev.target.id) {
     case "trackposition":
-      console.log('click pos');
+      if (levelArr[x][1] == levelArr[x-back][1]) {
+        alert('Matched Position!');
+      }
+      console.log('click pos at ' + x);
+      answerArr[i] = ['pos',x];
+      i++;
+
     break;
     case "trackcolor":
-      console.log('click col');
+      if (levelArr[x][0] == levelArr[x-back][0]) {
+        alert('Matched Color!');
+      }
+      console.log('click col at ' + x);
+      answerArr[i] = ['col',x];
+      i++;
+
+    break;
+    case "trackall":
+      if (levelArr[x][1] == levelArr[x-back][1] && levelArr[x][0] == levelArr[x-back][0]) {
+        alert('Matched all!');
+      }
+      console.log('click all at ' + x);
+      answerArr[i] = ['all',x];
+      i++;
+
     break;
   }
 }
+
+
 
 
 
@@ -228,12 +252,16 @@ function setColor() {   //function to set color and position, called by var star
   var index;
   var gamesquare = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
   for (index = 0; index < gamesquare.length; index++) {
-      gamesquare[index].style.backgroundColor = "white"; };  // resets square before start of loop  
+    gamesquare[index].style.backgroundColor = "white"; };  // resets square before start of loop  
 
+  console.log ('Round count ' + (x+1));
+  console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
   gamesquare[levelArr[x][1]].style.backgroundColor = colors[levelArr[x][0]];  // sets color and position for square
   x++;                                      // increments x on each loop iteration
 
-  if(x > rounds){
+
+  if(x >= rounds){
+    console.log('Level complete, stopping engine');
     clearInterval(start); // stops engine after x is above rounds
   };  
 
