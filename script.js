@@ -7,8 +7,8 @@ var levelArr = []; // Multidimensional array that will be used as the game level
 var x = 0; // Keep track of which round we're at
 var rounds = 50; // Number of rounds in the game
 var back = 3; // Difficulty modulator
-var colors = ['red','green','orange','yellow'];
-var board = 8; // Number of pieces on the board (strangely from 0)
+var colors = ['purple','green','orange','yellow'];
+var board = 9; // Number of pieces on the board (strangely from 0)
 
 // The idea of this section is to improve the level generator to include
 // color matching, position matching and thirdly a match of all Stimuli 
@@ -52,7 +52,7 @@ for (i=0 ; i<totalAllMatches/2 ; i++) {
 
     // Generate random matching values
     var rndCol = Math.floor(Math.random() * colors.length);
-    var rndPos = Math.floor(Math.random() * board + 1);
+    var rndPos = Math.floor(Math.random() * board );
 
     // Insert both color and position at match location and match-back location
     levelArr[rndMatch] = [rndCol, rndPos];
@@ -73,6 +73,7 @@ for (i=0 ; i<totalAllMatches/2 ; i++) {
 console.log ('Total iterations ' + iterationCounter);
 //console.log ('Iterations wasted ' + (iterationCounter-totalAllMatches));
 
+alert ('First loop complete');
 
 
 // Next iterate over the amount of allPositions
@@ -84,14 +85,13 @@ for (i=0 ; i<totalPosMatches/2 ; i++) {
   if (levelArr[rndMatch] == null && levelArr[rndMatch-back] == null ) {
 
     // Generate random matching values
-    var rndCol = Math.floor(Math.random() * colors.length); 
-    var rndPos = Math.floor(Math.random() * board + 1);
+    var rndCol = Math.floor(Math.random() * colors.length);
+    var rndPos = Math.floor(Math.random() * board);
     var secCol = 0;
 
-    // This is currently a hack. If the algorithm works overall, we need to 
-    // get a proper random number that doesn't match the first random number
-    if (rndCol > 5) secCol = rndCol - 2;
-    else secCol = rndCol + 2;
+    do {
+      secCol = Math.floor(Math.random() * colors.length);
+    } while (secCol != rndCol);    
 
     // Insert both color and position at match location and match-back location
     levelArr[rndMatch] = [rndCol, rndPos];
@@ -111,7 +111,7 @@ for (i=0 ; i<totalPosMatches/2 ; i++) {
 
 console.log ('Total iterations ' + iterationCounter);
 //console.log ('Iterations wasted ' + (iterationCounter-totalAllMatches));
-
+alert ('Second loop complete');
 
 // Next iterate over the amount of allColors
 for (i=0 ; i<totalColMatches/2 ; i++) {
@@ -123,13 +123,12 @@ for (i=0 ; i<totalColMatches/2 ; i++) {
 
     // Generate random matching values
     var rndCol = Math.floor(Math.random() * colors.length);    
-    var rndPos = Math.floor(Math.random() * board + 1);
+    var rndPos = Math.floor(Math.random() * board );
     var secPos = 0;
 
-    // This is currently a hack. We need to 
-    // get a proper random number that doesn't match the first random number
-    if (rndPos > 2) secPos = rndPos - 1;
-    else secCol = rndPos + 1;
+    do {
+      secCol = Math.floor(Math.random() * colors.length);
+    } while (secCol != rndCol);
 
     // Insert both color and position at match location and match-back location
     levelArr[rndMatch] = [rndCol, rndPos];
@@ -167,7 +166,7 @@ for (i=0 ; i<levelArr.length ; i++) {
         } while (tmpCol == tmpValues[0]);
 
         do {
-          var tmpPos = Math.floor(Math.random() * board + 1); 
+          var tmpPos = Math.floor(Math.random() * board); 
         } while (tmpPos == tmpValues[1]);
 
         levelArr[i] = [tmpCol,tmpPos];
@@ -181,7 +180,7 @@ for (i=0 ; i<levelArr.length ; i++) {
         } while (tmpCol == tmpValues[0]);
 
         do {
-          var tmpPos = Math.floor(Math.random() * board + 1); 
+          var tmpPos = Math.floor(Math.random() * board); 
         } while (tmpPos == tmpValues[1]);
 
         levelArr[i] = [tmpCol,tmpPos];
