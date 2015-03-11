@@ -7,7 +7,7 @@ var levelArr = []; // Multidimensional array that will be used as the game level
 var x = 0; // Keep track of which round we're at
 var rounds = 50; // Number of rounds in the game
 var back = 3; // Difficulty modulator
-var colors = ['purple','green','orange','yellow'];
+var colors = ['purple','green','orange','yellow','pink','blue','aqua'];
 var board = 9; // Number of pieces on the board (strangely from 0)
 
 // The idea of this section is to improve the level generator to include
@@ -66,14 +66,12 @@ for (i=0 ; i<totalAllMatches/2 ; i++) {
   iterationCounter ++;
 
   // Print out the current level array for debugging purpose
-  console.log (levelArr.join(', '));
+  //console.log (levelArr.join(', '));
 
 }
 
-console.log ('Total iterations ' + iterationCounter);
+console.log ('Total iterations after loop 1 ' + iterationCounter);
 //console.log ('Iterations wasted ' + (iterationCounter-totalAllMatches));
-
-alert ('First loop complete');
 
 
 // Next iterate over the amount of allPositions
@@ -102,16 +100,16 @@ for (i=0 ; i<totalPosMatches/2 ; i++) {
   }
 
   // Print out the current level array for debugging purpose
-  console.log (levelArr.join(', '));
+  //console.log (levelArr.join(', '));
 
   // Increment iteration counter to keep track of efficiency
   iterationCounter ++;
 
 }
 
-console.log ('Total iterations ' + iterationCounter);
+console.log ('Total iterations after loop 2 ' + iterationCounter);
 //console.log ('Iterations wasted ' + (iterationCounter-totalAllMatches));
-alert ('Second loop complete');
+
 
 // Next iterate over the amount of allColors
 for (i=0 ; i<totalColMatches/2 ; i++) {
@@ -139,7 +137,7 @@ for (i=0 ; i<totalColMatches/2 ; i++) {
   }
 
   // Print out the current level array for debugging purpose
-  console.log (levelArr.join(', '));
+  //console.log (levelArr.join(', '));
 
   // Increment iteration counter to keep track of efficiency
   iterationCounter ++;
@@ -150,61 +148,61 @@ for (i=0 ; i<totalColMatches/2 ; i++) {
   }
 }
 
-console.log ('Total iterations ' + iterationCounter);
+console.log ('Total iterations after loop 3 ' + iterationCounter);
 //console.log ('Iterations wasted ' + (iterationCounter-totalAllMatches));
 
 
 // Now we want to create non-matching values for the rest of the level array
 // We do this by looping the level array
 for (i=0 ; i<levelArr.length ; i++) {
-    if (levelArr[i] == null) {
-      if (i < back) { // If the empty slot is in the beginning we need to make sure there isn't a match forward (todo currently unsafe hack)
-        var tmpValues = levelArr[i+back];
+  if (levelArr[i] == null) {
+    if (i <= back) { // If the empty slot is in the beginning we need to make sure there isn't a match forward (todo currently unsafe hack)
+      var tmpValues = levelArr[i+back];
 
-        do {
-          var tmpCol = Math.floor(Math.random() * colors.length);
-        } while (tmpCol == tmpValues[0]);
+      do {
+        var tmpCol = Math.floor(Math.random() * colors.length);
+      } while (tmpCol == tmpValues[0]);
 
-        do {
-          var tmpPos = Math.floor(Math.random() * board); 
-        } while (tmpPos == tmpValues[1]);
+      do {
+        var tmpPos = Math.floor(Math.random() * board); 
+      } while (tmpPos == tmpValues[1]);
 
-        levelArr[i] = [tmpCol,tmpPos];
-      
-      } else if (i > (levelArr.length - back)) {
+      levelArr[i] = [tmpCol,tmpPos];
+    
+    } else if (i >= (levelArr.length - back)) {
 
-        var tmpValues = levelArr[i-back];
+      var tmpValues = levelArr[i-back];
 
-        do {
-          var tmpCol = Math.floor(Math.random() * colors.length);
-        } while (tmpCol == tmpValues[0]);
+      do {
+        var tmpCol = Math.floor(Math.random() * colors.length);
+      } while (tmpCol == tmpValues[0]);
 
-        do {
-          var tmpPos = Math.floor(Math.random() * board); 
-        } while (tmpPos == tmpValues[1]);
+      do {
+        var tmpPos = Math.floor(Math.random() * board); 
+      } while (tmpPos == tmpValues[1]);
 
-        levelArr[i] = [tmpCol,tmpPos];
+      levelArr[i] = [tmpCol,tmpPos];
 
-      } else { // If the empty slot is later we need to make sure there isn't a match forward and backward
-        var tmpValuesB = levelArr[i-back];
-        var tmpValuesF = levelArr[i+back];
+    } else { // If the empty slot is later we need to make sure there isn't a match forward and backward
+      var tmpValuesB = levelArr[i-back];
+      var tmpValuesF = levelArr[i+back];
 
-        do {
-          var tmpCol = Math.floor(Math.random() * colors.length);
-        } while (tmpCol == tmpValuesB[0] || tmpCol == tmpValuesF[0]);
+      do {
+        var tmpCol = Math.floor(Math.random() * colors.length);
+      } while (tmpCol == tmpValuesB[0] || tmpCol == tmpValuesF[0]);
 
-        do { // These guys are apparently dangeours and can freeze the script because of endless loop.
-             // It basically means that with the config params we supply there is no non-matching option.
-             // How we solve is a great mystery waiting to unfold
-          var tmpPos = Math.floor(Math.random() * colors.length);
-        } while (tmpPos == tmpValuesB[1] || tmpCol == tmpValuesF[1]);
+      do { // These guys are apparently dangeours and can freeze the script because of endless loop.
+           // It basically means that with the config params we supply there is no non-matching option.
+           // How we solve is a great mystery waiting to unfold
+        var tmpPos = Math.floor(Math.random() * board);
+      } while (tmpPos == tmpValuesB[1] || tmpPos == tmpValuesF[1]);
 
-        levelArr[i] = [tmpCol,tmpPos]; 
-      }
+      levelArr[i] = [tmpCol,tmpPos]; 
     }
-
-    console.log (levelArr.join(', '));
+  }    
 }
+
+console.log (levelArr.join(', '));
   
 
 /////////////////
@@ -251,5 +249,7 @@ function gameLoop() {
   //
   //
 };
+
+
 
 
