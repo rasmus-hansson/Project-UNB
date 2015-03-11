@@ -1,15 +1,18 @@
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
 
-var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+
+
+var x = 0; // Keep track of which round we're at
+var back = 1; // Difficulty modulator
+
+var rounds = 10; // Number of rounds in the game
+var colors = ['Purple','Green','Orange','Yellow'];
+var board = 9; // Number of pieces on the board (strangely from 0)
 
 var levelArr = []; // Multidimensional array that will be used as the game level with parameters from config
 var answerArr = []; // Keeping track of all the answers here
-var x = 0; // Keep track of which round we're at
-var rounds = 10; // Number of rounds in the game
-var back = 1; // Difficulty modulator
-var colors = ['Purple','Green','Orange','Yellow'];
-var board = 9; // Number of pieces on the board (strangely from 0)
+
 
 // The idea of this section is to improve the level generator to include
 // color matching, position matching and thirdly a match of all Stimuli 
@@ -214,7 +217,7 @@ console.log (levelArr.join(', '));
 function clickTrack (ev) {
   switch (ev.target.id) {
     case "trackposition":
-      if (levelArr[x][1] == levelArr[x-back][1]) {
+      if (levelArr[x-1][1] == levelArr[x-back-1][1]) {
         alert('Matched Position!');
       }
       console.log('click pos at ' + x);
@@ -223,7 +226,7 @@ function clickTrack (ev) {
 
     break;
     case "trackcolor":
-      if (levelArr[x][0] == levelArr[x-back][0]) {
+      if (levelArr[x-1][0] == levelArr[x-back-1][0]) {
         alert('Matched Color!');
       }
       console.log('click col at ' + x);
@@ -232,7 +235,7 @@ function clickTrack (ev) {
 
     break;
     case "trackall":
-      if (levelArr[x][1] == levelArr[x-back][1] && levelArr[x][0] == levelArr[x-back][0]) {
+      if (levelArr[x-1][1] == levelArr[x-back-1][1] && levelArr[x-1][0] == levelArr[x-back-1][0]) {
         alert('Matched all!');
       }
       console.log('click all at ' + x);
@@ -244,7 +247,7 @@ function clickTrack (ev) {
 }
 
 
-
+var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
 
 function setColor() {   //function to set color and position, called by var start
