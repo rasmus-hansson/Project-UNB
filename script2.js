@@ -13,20 +13,45 @@ var back = 2; //Number of N-back
 var rounds = 10; //Number of rounds per game
 
 var i = 0; //Iterator for gameloop
+var synthMatch = null; // counts number of synthetic matches
 
 for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
   console.log(i);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
   var rnd = Math.random();
-  if ((rnd < matchPercent) && (i >= (back))) {
+  if ((rnd < matchPercent) && (i >= (back))) {    // ATT GÖRA: LÄGG TILL ELSE IFS FÖR ATT GENERERA FORCED MATCHING AV BARA COLOR ELLER POSITION
   
     levelArray[i] = levelArray[i-back];
     matchArr.push(1);
     console.log(levelArray[i-back]);
-  } else {
+    synthMatch++;
+
+  } else {        // ATT GÖRA: LÄGG IN TRACKING AV NATURLIGA MATCHES SOM PUSHAS TILL matchArr!!!!
     var rndColor = Math.floor(Math.random() * ( stimColor.length));
     var rndPosition = Math.floor(Math.random() * ( stimPosition.length));
 
     levelArray.push([rndPosition, rndColor]);
+    //console.log(levelArray[i-back]);
+      
+
+      if((i >= (back)) && (rndColor === levelArray[i-back][1]) ){
+
+        matchArr.push(2);
+
+        console.log('A natural match!');
+      }
+      else if((i >= (back)) && (rndPosition === levelArray[i-back][0])){
+
+        matchArr.push(3);
+
+        console.log('A natural match!');
+      }
+
+        else if((i >= (back)) && (levelArray[i] ===  levelArray[i-back])){
+
+          matchArr.push(4);
+
+        console.log('A natural match!');
+        };
 
   };
 
@@ -34,9 +59,9 @@ for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per gam
 
 
 
-console.log (levelArray.join(', '));
-console.log (matchArr);
-console.log (matchArr.length + ' matches in this round.');
+//console.log (levelArray.join(', '));
+console.log (matchArr); //logs contents of matcharray
+console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' are synthetic, and '+(matchArr.length-synthMatch)+' are natural!'); //logs number of synthetic matches
 
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
@@ -57,24 +82,32 @@ function setColor() {   //function to set color and position based on what's in 
     console.log('Level complete, stopping engine');
     console.log(answerArr);
     clearInterval(start); // stops engine after x is above rounds
-    console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!');
+    console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!');  //logs number of correct answers
       
-      localStorage.setItem('answers', answerArr.length);
+      localStorage.setItem('answers', answerArr.length);  //stores number of correct answers in local file
       
   };  
+};
 
-
-
-if((x < rounds) && (x >= (back))){
-      if((levelArray[x][0] === levelArray[x-back][0]) || (levelArray[x][1] === levelArray[x-back][1])){
+/*
+if((x < rounds) && (x >= (back))){ //these conditionals logs all the non random-generated forced matches (a.k.a 'natural matches')
+                                  // ATT GÖRA: DESSA SKA MERGAS MED RANDOMISERINGSLOOPEN!
+      if((levelArray[x][0] === levelArray[x-back][0]) != (levelArray[x][1] === levelArray[x-back][1])){
         console.log(x);
         console.log(x-back);
         matchArr.push(2);
         console.log('A natural match!');
-      };
+      }
+      else if((levelArray[x][1] === levelArray[x-back][1]) != (levelArray[x][0] === levelArray[x-back][0])){
+        console.log(x);
+        console.log(x-back);
+        matchArr.push(2);
+        console.log('A natural match!');
+      }; 
+
 
 };
-};
+}; */
 
 
 
@@ -87,9 +120,9 @@ if((x < rounds) && (x >= (back))){
 function clickTrack (ev) {
   switch (ev.target.id) {
     case "trackposition":
-      if (levelArray[x-1][0] == levelArray[x-back-1][0]) {
+      if (levelArray[x-1][0] == levelArray[x-back-1][0]) {  //checks if your click was correct
         console.log('Matched Position!');
-        answerArr.push(1);
+        answerArr.push(1); // pushes correct answers to answerArr
       }
       else {
         wrongArr[i] = 1;
