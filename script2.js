@@ -57,26 +57,15 @@ for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per gam
 
 };
 
+console.log (levelArray.join(', '));
 
 
-//console.log (levelArray.join(', '));
 console.log (matchArr); //logs contents of matcharray
 console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' are synthetic, and '+(matchArr.length-synthMatch)+' are natural!'); //logs number of synthetic matches
 
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
-
-  var index;
-  //var gamesquare = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
-  for (index = 0; index < stimPosition.length; index++) {
-    stimPosition[index].style.backgroundColor = "white"; };  // resets square before start of loop  
-
-  //console.log ('Round count ' + (x+1));
-  //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
-  stimPosition[levelArray[x][0]].style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
-  x++;                                      // increments x on each loop iteration
-
 
   if(x >= rounds){
     console.log('Level complete, stopping engine');
@@ -85,8 +74,23 @@ function setColor() {   //function to set color and position based on what's in 
     console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!');  //logs number of correct answers
       
       localStorage.setItem('answers', answerArr.length);  //stores number of correct answers in local file
-      
-  };  
+
+  } else { 
+
+    var index;
+    //var gamesquare = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
+    for (index = 0; index < stimPosition.length; index++) {
+      stimPosition[index].style.backgroundColor = "white"; };  // resets square before start of loop  
+
+    //console.log ('Round count ' + (x+1));
+    //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
+    stimPosition[levelArray[x][0]].style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
+    x++;                                      // increments x on each loop iteration
+
+  }
+
+
+    
 };
 
 /*
@@ -123,6 +127,7 @@ function clickTrack (ev) {
       if (levelArray[x-1][0] == levelArray[x-back-1][0]) {  //checks if your click was correct
         console.log('Matched Position!');
         answerArr.push(1); // pushes correct answers to answerArr
+        score.setAttribute("value", (answerArr.length/matchArr.length)*100);
       }
       else {
         wrongArr[i] = 1;
@@ -136,6 +141,7 @@ function clickTrack (ev) {
       if (levelArray[x-1][1] == levelArray[x-back-1][1]) {
         console.log('Matched Color!');
         answerArr.push(1);
+        score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
       }
       else {
         wrongArr[i] = 1;
@@ -150,6 +156,7 @@ function clickTrack (ev) {
       if (levelArray[x-1][1] == levelArray[x-back-1][1] && levelArray[x-1][0] == levelArray[x-back-1][0]) {
         console.log('Matched all!');
         answerArr.push(1);
+        score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
       }
       else {
         wrongArr[i] = 1;
