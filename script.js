@@ -8,7 +8,7 @@ var back = 1; // Difficulty modulator
 
 var rounds = 10; // Number of rounds in the game
 var colors = ['Purple','Green','Orange','Yellow'];
-var board = 9; // Number of pieces on the board (strangely from 0)
+var board = 9; // Number of pieces on the board
 
 var levelArr = []; // Multidimensional array that will be used as the game level with parameters from config
 var answerArr = []; // Keeping track of all the answers here
@@ -49,7 +49,7 @@ var iterationCounter = 0;
 for (i=0 ; i<totalAllMatches/2 ; i++) {
   
   // Random position for a match
-  var rndMatch = Math.floor(Math.random() * (rounds - back)) + back;  
+  var rndMatch = Math.floor(Math.random() * (rounds - back + 1)) + back;  
 
   // If this random position is valid, insert the match
   if ( levelArr[rndMatch] == null && levelArr[rndMatch-back] == null ) {
