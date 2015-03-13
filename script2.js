@@ -1,3 +1,14 @@
+// fix local storage to enable multiple storages
+// graphics
+// forced matching if no matches at round 8 
+// Spara n-backnivå, stimuli, rounds i local storage-filen
+// Möjlighet att växla stimuli, ändra antal positioner
+// Monte carlo simulation
+// Settings controls
+// 
+
+
+
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
 var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua'];
@@ -9,7 +20,7 @@ var matchArr = []; //contains number of matches
 var wrongArr = []; //contains number of wrong clicks
 
 var x = 0;  //What round we are on
-var back = 2; //Number of N-back
+var back = 3; //Number of N-back
 var rounds = 10; //Number of rounds per game
 
 var i = 0; //Iterator for gameloop
@@ -67,28 +78,35 @@ var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs 
 
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
 
-  if(x >= rounds){
-    console.log('Level complete, stopping engine');
-    console.log(answerArr);
-    clearInterval(start); // stops engine after x is above rounds
-    console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!');  //logs number of correct answers
-      
-      localStorage.setItem('answers', answerArr.length);  //stores number of correct answers in local file
+   if (x <= rounds){ 
 
-  } else { 
-
+    console.log('x is now at' + x);
     var index;
     //var gamesquare = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
     for (index = 0; index < stimPosition.length; index++) {
-      stimPosition[index].style.backgroundColor = "white"; };  // resets square before start of loop  
+      stimPosition[index].style.backgroundColor = "white"; 
+      stimPosition[index].style.transitionDuration = "2.5s";  // resets square before start of loop 
+}
 
     //console.log ('Round count ' + (x+1));
     //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
+   if(x < rounds){  
     stimPosition[levelArray[x][0]].style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
-    x++;                                      // increments x on each loop iteration
+      stimPosition[levelArray[x][0]].style.transitionDuration = "0.1s"; 
+            };
+                             
+  }
+  else{
+    console.log('Level complete, stopping engine');
+    console.log(answerArr);
+    clearInterval(start); // stops engine after x is above rounds
+    console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!\n You had '+wrongArr.length+' incorrect answers.');  //logs number of correct answers
+      document.getElementById("result").innerHTML = 'Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible! <br> You had '+wrongArr.length+' incorrect answers.';
+      localStorage.setItem('answers', answerArr.length);  //stores number of correct answers in local file
+
 
   }
-
+      x++;  // increments x on each run of the function setColor, called by setInterval in var start
 
     
 };
@@ -130,7 +148,7 @@ function clickTrack (ev) {
         score.setAttribute("value", (answerArr.length/matchArr.length)*100);
       }
       else {
-        wrongArr[i] = 1;
+        wrongArr.push(1);
       }
       console.log('click pos at ' + x);
       
@@ -144,7 +162,7 @@ function clickTrack (ev) {
         score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
       }
       else {
-        wrongArr[i] = 1;
+        wrongArr.push(1);
       }
       console.log('click col at ' + x);
       console.log('round-back is' + (x-back));
@@ -159,7 +177,7 @@ function clickTrack (ev) {
         score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
       }
       else {
-        wrongArr[i] = 1;
+        wrongArr.push(1);
       }
       console.log('click all at ' + x);
       
