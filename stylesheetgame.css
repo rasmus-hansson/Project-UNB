@@ -1,20 +1,14 @@
 
-.nothing{
-color: pink;
-style:awesome;
-
-}
 
 
 a {
-	font-family: Arial;
+	font-family: sans-serif;
 	text-decoration: none;
 	color: #cc0000;
 	cursor: default;
 	text-align: center;
 	background-color: #ff69b4;
 }
-
 
 
 table {
@@ -167,6 +161,10 @@ ol {
 
 progress {
 
+<<<<<<< HEAD
+=======
+	
+>>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     border: 0.1px;  
     height: 8px;  
     position: relative;
@@ -183,8 +181,13 @@ progress {
 
 
 
+<<<<<<< HEAD
 progress::-moz-progress-bar {  
 
+=======
+progress::-moz-progress-bar {
+		
+>>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -194,6 +197,10 @@ progress::-moz-progress-bar {
 
 progress::-o-progress-bar {  
 
+<<<<<<< HEAD
+=======
+		
+>>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -203,6 +210,10 @@ progress::-o-progress-bar {
 
 progress::-webkit-progress-bar { 
 
+<<<<<<< HEAD
+=======
+		
+>>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
