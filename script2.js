@@ -1,13 +1,11 @@
-// fix local storage to enable multiple storages
-// graphics
-// forced matching if no matches at round 8 
-// Spara n-backnivå, stimuli, rounds i local storage-filen
+// Forced matching if no matches at round 8 
 // Möjlighet att växla stimuli, ändra antal positioner
-// Monte carlo simulation
 // Settings controls
+// Förfina databasen så den innehåller ALLT vi behöver, och displayar som vi vill
 
 
-
+// Monte carlo simulation
+// graphics
 
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
