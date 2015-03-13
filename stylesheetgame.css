@@ -2,14 +2,15 @@
 
 
 a {
+
 	font-family: sans-serif;
+	font-family: Arial, Helvetica;
 	text-decoration: none;
 	color: #cc0000;
 	cursor: default;
 	text-align: center;
 	background-color: #ff69b4;
 }
-
 
 table {
 	border: 0.15em solid black;
