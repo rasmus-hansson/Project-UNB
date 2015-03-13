@@ -18,13 +18,16 @@ var matchPercent = 0.3; //Desired percent matches
 var answerArr = []; //contains players answers
 var matchArr = []; //contains number of matches
 var wrongArr = []; //contains number of wrong clicks
+var playedGames = [];
 
 var x = 0;  //What round we are on
-var back = 3; //Number of N-back
-var rounds = 10; //Number of rounds per game
+var back = 1; //Number of N-back
+var rounds = 3; //Number of rounds per game
 
 var i = 0; //Iterator for gameloop
 var synthMatch = null; // counts number of synthetic matches
+
+//localStorage.removeItem('playedgames');
 
 for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
   console.log(i);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
@@ -77,7 +80,29 @@ console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' a
 // Handle the display of latest score
 //
 //
-var answers = localStorage.getItem('answers');
+var playedGames = JSON.parse(localStorage.getItem('playedgames')); // Try to get local storage item
+
+if (playedGames) { 
+
+  console.log (playedGames);
+
+  game = "<table>";
+
+  for (i=0 ; i < playedGames.length; i++) {
+    game += "<tr>";
+    game += "<td>" + i + "</td>";
+    game += "<td>" + playedGames[i].time + "</td>";
+    game += "<td>" + playedGames[i].scorepercent + "</td>";
+    game += "<td>" + playedGames[i].config.nback + "</td>";
+    game += "<td>" + playedGames[i].config.matchpercent + "</td>";
+    game += "</tr>";
+  }
+  game += "</table>";
+  console.log(game);
+  result.innerHTML = game;
+} else {
+  playedGames = [];
+}
 
 
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
@@ -111,13 +136,24 @@ function setColor() {   //function to set color and position based on what's in 
     clearInterval(start); // stops engine after x is above rounds
     console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!\n You had '+wrongArr.length+' incorrect answers.');  //logs number of correct answers
       document.getElementById("result").innerHTML = 'Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible! <br> You had '+wrongArr.length+' incorrect answers.';
-      localStorage.setItem('answers', answerArr.length);  //stores number of correct answers in local file
+      
+      var game = {
+        time: Date(),
+        scorepercent: answerArr.length,
+        config: {
+          nback: back,
+          matchpercent: matchPercent
+        }
+      };     
 
+      // Save this game in array of games for local storage
+      playedGames.push(game);
 
+      //console.log(playedGames);
+      localStorage.setItem('playedgames', JSON.stringify(playedGames));  //stores number of correct answers in local file
   }
       x++;  // increments x on each run of the function setColor, called by setInterval in var start
-
-    
+          
 };
 
 /*
