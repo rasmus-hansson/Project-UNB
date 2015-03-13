@@ -120,17 +120,23 @@ ol {
    -o-transition:background-color 1s linear;
    transition:background-color 1s linear;
    text-align:center;
+   }
 
-}
 
-#but {
-
- 	margin-top: 5px;
+.but{
+	cursor: default;
  	font-family: Arial;
- 	font-size: 1.3em;
- 	padding-top: 5px;
-
+  font-size: 1em;
+	position: relative;
+	display: inline;
+	/*width: 3em;
+	height: 3em;
+	border: 0.1em black solid;
+	border-radius: 1.4em;*/
+text-align:center;
+padding-top: 2em;
 }
+
 
 #trackposition {
   

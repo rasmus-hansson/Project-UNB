@@ -5,7 +5,7 @@
 // Möjlighet att växla stimuli, ändra antal positioner
 // Monte carlo simulation
 // Settings controls
-// 
+
 
 
 
@@ -74,6 +74,12 @@ console.log (levelArray.join(', '));
 console.log (matchArr); //logs contents of matcharray
 console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' are synthetic, and '+(matchArr.length-synthMatch)+' are natural!'); //logs number of synthetic matches
 
+// Handle the display of latest score
+//
+//
+var answers = localStorage.getItem('answers');
+
+
 var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
@@ -91,6 +97,9 @@ function setColor() {   //function to set color and position based on what's in 
     //console.log ('Round count ' + (x+1));
     //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
    if(x < rounds){  
+    var progressCounter = (x+1) + '/' + rounds;
+    roundscount.innerHTML = progressCounter;
+
     stimPosition[levelArray[x][0]].style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
       stimPosition[levelArray[x][0]].style.transitionDuration = "0.1s"; 
             };
