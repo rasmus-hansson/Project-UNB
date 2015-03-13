@@ -11,14 +11,7 @@ a {
 }
 
 table {
-	border: 0.15em solid black;
-	text-align: center;
-	padding: 0.15em;
-	margin: auto;
-	background-color: white;
-	table-layout: fixed;
-	width: 90%;
-	height: 50%;
+	font-size: 10px;
 }
 
 td {
