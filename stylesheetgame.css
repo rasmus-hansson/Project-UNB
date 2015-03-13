@@ -1,3 +1,11 @@
+
+.nothing{
+color: pink;
+style:awesome;
+
+}
+
+
 a {
 	font-family: Arial;
 	text-decoration: none;
@@ -159,7 +167,6 @@ ol {
 
 progress {
 
-		padding-left: 4em;
     border: 0.1px;  
     height: 8px;  
     position: relative;
@@ -178,7 +185,6 @@ progress {
 
 progress::-moz-progress-bar {  
 
-		padding-left: 4em;
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -188,7 +194,6 @@ progress::-moz-progress-bar {
 
 progress::-o-progress-bar {  
 
-		padding-left: 4em;
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -198,7 +203,6 @@ progress::-o-progress-bar {
 
 progress::-webkit-progress-bar { 
 
-		padding-left: 4em; 
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
