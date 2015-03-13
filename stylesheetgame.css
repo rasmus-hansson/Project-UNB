@@ -2,13 +2,7 @@
 
 
 a {
-<<<<<<< HEAD
-	font-family: Garamond;
-=======
-
-	font-family: sans-serif;
-	font-family: Arial, Helvetica;
->>>>>>> rasmus-hansson-easer_egg
+	font-family: Arial;
 	text-decoration: none;
 	color: #cc0000;
 	cursor: default;
