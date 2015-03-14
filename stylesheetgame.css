@@ -1,4 +1,9 @@
+body {
+	font-family: Arial;
+}
 
+* {
+}
 
 
 a {
@@ -10,9 +15,12 @@ a {
 	background-color: #ff69b4;
 }
 
+
+
 table {
+	font-family: Arial;
 	font-size: 10px;
-  position: relative;
+  	position: relative;
 }
 
 td {
@@ -160,6 +168,3 @@ progress::-webkit-progress-bar {
 }  
 
 
-
-* {
-}
