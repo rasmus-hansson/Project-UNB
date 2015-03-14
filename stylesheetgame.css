@@ -122,6 +122,17 @@ html {
 	margin-top: -6em;
 }
 
+#showResult {
+
+
+  font-family: Garamond, serif;
+  font-size: 1.5em;
+  position: absolute;
+  margin-left: 10em;
+  margin-top: -6em;
+
+}
+
 progress {
 
     border: 0.1px;  

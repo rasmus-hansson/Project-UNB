@@ -24,18 +24,38 @@ var gameSquares = 9;
 var stimPositionSetting = [];
 
 var back = 3; //Number of N-back
-var rounds = 5; //Number of rounds per game
+var rounds = 10; //Number of rounds per game
 
-var i = 0; //Iterator for gameloop
+var i; //Iterator for gameloop
+var r; //Iterator for randomization
 var synthMatch = null; // counts number of synthetic matches
+var rndColor;
+var rndPosition;
 
 //localStorage.removeItem('playedgames');
 
 var x;  //What round we are on
+var rnd; //randomization number
 
 function setupGame() {
 
-  x=0;  
+  x=0;
+  i=0;  
+  r=0;
+  matchArr.length = 0;
+  levelArray.length = 0;
+  answerArr.length = 0;
+  matchArr.length = 0;
+  wrongArr.length = 0;
+  synthMatch = null;
+  rndColor = 0;
+  rndPosition = 0;
+  stimPosition.length = 0;
+  score.setAttribute("value", 0); 
+
+  console.log('at beginning of function setupgame, matchArr is '+matchArr);
+  console.log('at beginning of function setupgame, levelArray is '+levelArray);
+  rnd=0;
 
   // This routine is supposed to generate game squares based on stimposition length
   //
@@ -55,38 +75,39 @@ function setupGame() {
   //
 
 
-  for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
-    console.log(i);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
-    var rnd = Math.random();
-    if ((rnd < matchPercent) && (i >= (back))) {    // ATT GÖRA: LÄGG TILL ELSE IFS FÖR ATT GENERERA FORCED MATCHING AV BARA COLOR ELLER POSITION
+  for ( r=0 ; r<rounds ; r++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
+                      //generates random stimuli in the other cases, then pushes those positions to levelArray
+    rnd = Math.random();
+    console.log('r is' + r + 'and rnd is ' + rnd);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
+    if ((rnd < matchPercent) && (r >= (back))) {    // ATT GÖRA: LÄGG TILL ELSE IFS FÖR ATT GENERERA FORCED MATCHING AV BARA COLOR ELLER POSITION
     
-      levelArray[i] = levelArray[i-back];
+      levelArray[r] = levelArray[r-back];
       matchArr.push(1);
-      console.log(levelArray[i-back]);
+      console.log(levelArray[r-back]);
       synthMatch++;
 
     } else {        // ATT GÖRA: LÄGG IN TRACKING AV NATURLIGA MATCHES SOM PUSHAS TILL matchArr!!!!
-      var rndColor = Math.floor(Math.random() * ( stimColor.length));
-      var rndPosition = Math.floor(Math.random() * ( stimPosition.length));
+      rndColor = Math.floor(Math.random() * ( stimColor.length));
+      rndPosition = Math.floor(Math.random() * ( stimPosition.length));
 
       levelArray.push([rndPosition, rndColor]);
       //console.log(levelArray[i-back]);
         
 
-        if((i >= (back)) && (rndColor === levelArray[i-back][1]) ){
+        if((r >= (back)) && (rndColor === levelArray[r-back][1]) ){
 
           matchArr.push(2);
 
           console.log('A natural match!');
         }
-        else if((i >= (back)) && (rndPosition === levelArray[i-back][0])){
+        else if((r >= (back)) && (rndPosition === levelArray[r-back][0])){
 
           matchArr.push(3);
 
           console.log('A natural match!');
         }
 
-          else if((i >= (back)) && (levelArray[i] ===  levelArray[i-back])){
+          else if((r >= (back)) && (levelArray[r] ===  levelArray[r-back])){
 
             matchArr.push(4);
 
@@ -95,9 +116,13 @@ function setupGame() {
 
     };
 
+
   };
 
-  console.log (levelArray.join(', '));
+
+    console.log('matchArr contains ' + matchArr);
+    console.log('levelArray contains ' +levelArray);
+
 
 
   console.log (matchArr); //logs contents of matcharray
@@ -114,13 +139,13 @@ function setupGame() {
 
     game = "<table>";
 
-    for (i=0 ; i < playedGames.length; i++) {
+    for (y=0 ; y < playedGames.length; y++) {
       game += "<tr>";
-      game += "<td>" + i + "</td>";
-      game += "<td>" + playedGames[i].time + "</td>";
-      game += "<td>" + playedGames[i].scorepercent + "</td>";
-      game += "<td>" + playedGames[i].config.nback + "</td>";
-      game += "<td>" + playedGames[i].config.matchpercent + "</td>";
+      game += "<td>" + y + "</td>";
+      game += "<td>" + playedGames[y].time + "</td>";
+      game += "<td>" + playedGames[y].scorepercent + "</td>";
+      game += "<td>" + playedGames[y].config.nback + "</td>";
+      game += "<td>" + playedGames[y].config.matchpercent + "</td>";
       game += "</tr>";
     }
     game += "</table>";
@@ -135,6 +160,15 @@ setupGame();
 start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
+
+/////////////////////////////////////////////////////////////////////////////////////
+//
+//                     Here begins the function that sets color and position based on
+//                     what's in levelArray
+//
+//
+
+
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
 
    if (x <= rounds){ 
@@ -144,7 +178,7 @@ function setColor() {   //function to set color and position based on what's in 
     for (z = 0; z < stimPosition.length; z++) {
       
       document.getElementById(stimPosition[z]).style.backgroundColor = "white"; 
-      document.getElementById(stimPosition[z]).style.transitionDuration = "2.5s";  // resets square before start of loop 
+      document.getElementById(stimPosition[z]).style.transitionDuration = "2s";  // resets square before start of loop 
     }
 
     //console.log ('Round count ' + (x+1));
@@ -152,9 +186,9 @@ function setColor() {   //function to set color and position based on what's in 
    if(x < rounds){  
     var progressCounter = (x+1) + '/' + rounds;
     roundscount.innerHTML = progressCounter;
-    console.log(levelArray);
+    //console.log(levelArray);
     document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
-      document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "0.1s"; 
+      document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "1ms"; 
             };
                              
     }else{
@@ -163,8 +197,9 @@ function setColor() {   //function to set color and position based on what's in 
       console.log("interval "+ start);
       clearInterval(start); // stops engine after x is above rounds
       console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!\n You had '+wrongArr.length+' incorrect answers.');  //logs number of correct answers
-        document.getElementById("result").innerHTML = 'Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible! <br> You had '+wrongArr.length+' incorrect answers.';
-        
+        document.getElementById("showResult").innerHTML = 'Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible! <br> You had '+wrongArr.length+' incorrect answers.';
+      
+       console.log('Your matchArr now contains '+matchArr); 
         var game = {
           time: Date(),
           scorepercent: answerArr.length,
@@ -241,6 +276,7 @@ function clickTrack (ev) {
       //var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
     break;
     case "restart":
+      console.log('matchArr is '+matchArr);
       console.log(JSON.stringify(start));
       clearInterval(start); // stops engine after x is above rounds
       setupGame();  
