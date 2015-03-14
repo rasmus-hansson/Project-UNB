@@ -2,6 +2,7 @@
 // Möjlighet att växla stimuli, ändra antal positioner
 // Settings controls
 // Förfina databasen så den innehåller ALLT vi behöver, och displayar som vi vill
+// Startknapp och restartknapp
 
 
 // Monte carlo simulation
@@ -10,22 +11,44 @@
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
 var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua'];
-var stimPosition = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
+//var stimPosition = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
+var stimPosition = [];
 var levelArray = [];    //Empty array to store the stimuli of each round
 var matchPercent = 0.3; //Desired percent matches
 var answerArr = []; //contains players answers
 var matchArr = []; //contains number of matches
 var wrongArr = []; //contains number of wrong clicks
 var playedGames = [];
+var gameSquares = 9;
+
+var stimPositionSetting = []
 
 var x = 0;  //What round we are on
-var back = 1; //Number of N-back
-var rounds = 3; //Number of rounds per game
+var back = 3; //Number of N-back
+var rounds = 20; //Number of rounds per game
 
 var i = 0; //Iterator for gameloop
 var synthMatch = null; // counts number of synthetic matches
 
 //localStorage.removeItem('playedgames');
+
+// This routine is supposed to generate game squares based on stimposition length
+//
+var squareshtml = "";
+for (i=0 ; i < gameSquares ; i++) {
+  squareshtml += "<div class='gamesquare' id=\"" + 'gs'+i + "\"></div>"; 
+  stimPosition.push('gs'+i);
+  stimPositionSetting.push('gs'+stimPosition[i]);
+  if(i === 2 || i === 5 || i === 8) {
+    squareshtml += "<br>";
+  }
+}
+console.log(squareshtml);
+
+  console.log('this many stimpositions'+stimPosition);
+gamesquares.innerHTML = squareshtml;
+//
+
 
 for ( i=0 ; i<rounds ; i++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
   console.log(i);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
@@ -80,7 +103,7 @@ console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' a
 //
 var playedGames = JSON.parse(localStorage.getItem('playedgames')); // Try to get local storage item
 
-if (playedGames) { 
+if (playedGames) {     // This conditional will display all your saved results in the gamescreen
 
   console.log (playedGames);
 
@@ -110,11 +133,11 @@ function setColor() {   //function to set color and position based on what's in 
    if (x <= rounds){ 
 
     console.log('x is now at' + x);
-    var index;
-    //var gamesquare = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
-    for (index = 0; index < stimPosition.length; index++) {
-      stimPosition[index].style.backgroundColor = "white"; 
-      stimPosition[index].style.transitionDuration = "2.5s";  // resets square before start of loop 
+    
+    for (z = 0; z < stimPosition.length; z++) {
+      
+      document.getElementById(stimPosition[z]).style.backgroundColor = "white"; 
+      document.getElementById(stimPosition[z]).style.transitionDuration = "2.5s";  // resets square before start of loop 
 }
 
     //console.log ('Round count ' + (x+1));
@@ -122,9 +145,9 @@ function setColor() {   //function to set color and position based on what's in 
    if(x < rounds){  
     var progressCounter = (x+1) + '/' + rounds;
     roundscount.innerHTML = progressCounter;
-
-    stimPosition[levelArray[x][0]].style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
-      stimPosition[levelArray[x][0]].style.transitionDuration = "0.1s"; 
+    console.log(levelArray);
+    document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
+      document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "0.1s"; 
             };
                              
   }
@@ -154,25 +177,6 @@ function setColor() {   //function to set color and position based on what's in 
           
 };
 
-/*
-if((x < rounds) && (x >= (back))){ //these conditionals logs all the non random-generated forced matches (a.k.a 'natural matches')
-                                  // ATT GÖRA: DESSA SKA MERGAS MED RANDOMISERINGSLOOPEN!
-      if((levelArray[x][0] === levelArray[x-back][0]) != (levelArray[x][1] === levelArray[x-back][1])){
-        console.log(x);
-        console.log(x-back);
-        matchArr.push(2);
-        console.log('A natural match!');
-      }
-      else if((levelArray[x][1] === levelArray[x-back][1]) != (levelArray[x][0] === levelArray[x-back][0])){
-        console.log(x);
-        console.log(x-back);
-        matchArr.push(2);
-        console.log('A natural match!');
-      }; 
-
-
-};
-}; */
 
 
 
@@ -226,6 +230,13 @@ function clickTrack (ev) {
       
       i++;
 
+    break;
+
+     case "play":
+      var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+    break;
+    case "restart":
+      restartGame();
     break;
   }
 };
