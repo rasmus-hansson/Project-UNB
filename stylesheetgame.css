@@ -11,14 +11,8 @@ a {
 }
 
 table {
-	border: 0.15em solid black;
-	text-align: center;
-	padding: 0.15em;
-	margin: auto;
-	background-color: white;
-	table-layout: fixed;
-	width: 90%;
-	height: 50%;
+	font-size: 10px;
+  position: relative;
 }
 
 td {
@@ -26,11 +20,13 @@ td {
 	text-align: center;
 	margin: auto;
 	padding: 1em;
+  position: relative;
 }
 
 tr {
 	text-align: center;
 	margin: auto;
+  position: relative;
 }
 
 .maintable {
@@ -44,7 +40,7 @@ p {
 body {
 	border: 0.5em solid black;
 	
-    
+   padding-top: 3em;
    padding-left: 4em;
 
 }
@@ -52,37 +48,7 @@ body {
 html {
 }
 
-.category {
 
-	font-family: Arial, serif;
-	padding: 0.3em;
-}
-
-.pagetext {
-	font-family: Garamond, serif;
-	font-size: 1.1em;
-}
-
-img {
-	height: 600px;
-	width: 400px;
-}
-
-img:hover{
-	height: 900px;
-	width: 700px;
-}
-
-li {
-	margin-bottom: 1em;
-}
-
-ul {
-	margin-top: 2em;
-}
-
-ol {
-}
 
 .gamesquare {
 
@@ -138,16 +104,6 @@ ol {
 	background-color: #ff69b4;
 }
 
-/*@keyframes anim {
-    from {opacity: 1;}
-    to {opacity: 0.1;}
-}
-
-
--webkit-@keyframes anim {
-    from {opacity: 1;}
-    to {opacity: 0.1;}
-}*/
 
 #result {
 
@@ -160,10 +116,6 @@ ol {
 
 progress {
 
-<<<<<<< HEAD
-=======
-	
->>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     border: 0.1px;  
     height: 8px;  
     position: relative;
@@ -180,13 +132,9 @@ progress {
 
 
 
-<<<<<<< HEAD
-progress::-moz-progress-bar {  
-
-=======
 progress::-moz-progress-bar {
 		
->>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
+
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -196,10 +144,6 @@ progress::-moz-progress-bar {
 
 progress::-o-progress-bar {  
 
-<<<<<<< HEAD
-=======
-		
->>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -209,10 +153,6 @@ progress::-o-progress-bar {
 
 progress::-webkit-progress-bar { 
 
-<<<<<<< HEAD
-=======
-		
->>>>>>> c7eda056719559f317d0960ccf3debf7d6eef88e
     background-color: #ff69b4 ;  
     border: 0;  
     height: 8px;  
@@ -220,12 +160,6 @@ progress::-webkit-progress-bar {
 }  
 
 
-/*progress::-moz-progress-value {  
-    background-color: #ff69b4 ;  
-    border: 0;  
-    height: 8px;  
-    /*border-radius: 9px; */
-}  
 
 * {
 }
