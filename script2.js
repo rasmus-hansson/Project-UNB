@@ -126,7 +126,7 @@ if (playedGames) {     // This conditional will display all your saved results i
 }
 
 
-var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+
 
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
 
