@@ -201,7 +201,9 @@ function setColor() {   //function to set color and position based on what's in 
       roundscount.innerHTML = progressCounter;
       currentBack.innerHTML = back+'-back';
       //console.log(levelArray);
-      stimuli[1].values[levelArray[x][1]].play();
+      
+      if (stimuli[1].type == "audio") stimuli[1].values[levelArray[x][1]].play();
+      
       document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
       document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "1ms"; 
     };
@@ -307,7 +309,7 @@ function changeTrack (ev) {
 function clickTrack (ev) {  
     switch (ev.target.id) {
       case "trackposition":
-        if (gameState = "playing") {
+        if (gameState == "playing") {
           if (levelArray[x-1][0] == levelArray[x-back-1][0]) {  //checks if your click was correct
             console.log('Matched Position!');
             answerArr.push(1); // pushes correct answers to answerArr
@@ -321,7 +323,7 @@ function clickTrack (ev) {
 
       break;
       case "trackcolor":
-        if (gameState = "playing") {
+        if (gameState == "playing") {
           if (levelArray[x-1][1] == levelArray[x-back-1][1]) {
             console.log('Matched Color!');
             answerArr.push(1);
@@ -335,7 +337,7 @@ function clickTrack (ev) {
 
       break;
       case "trackall":
-        if (gameState = "playing") {
+        if (gameState == "playing") {
           if (levelArray[x-1][1] == levelArray[x-back-1][1] && levelArray[x-1][0] == levelArray[x-back-1][0]) {
             console.log('Matched all!');
             answerArr.push(1);
