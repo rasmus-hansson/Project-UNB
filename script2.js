@@ -372,9 +372,12 @@ function clickTrack (ev) {
       case "restart":
         console.log('matchArr is '+matchArr);
         console.log(JSON.stringify(start));
+
+        gameState = "playing";
+        play.innerHTML = "Pause";        
         clearInterval(start); // stops engine after x is above rounds
         document.getElementById("showResult").innerHTML = "";
-        setupGame();  
+        setupGame();
         start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
       break;
       case "stop":
