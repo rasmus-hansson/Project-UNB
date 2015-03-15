@@ -8,6 +8,37 @@
 // Monte carlo simulation
 // graphics
 
+var colorStim = {
+  type: "color",
+  values: ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua']
+}
+
+var audioStim = {
+  type: "audio",
+  values: ['Beer','Brandy','Champagne','Gin', 'Rum', 'Tequila','Vodka','Water','Whiskey','Wine']
+}
+
+var positionStim = {
+  type: "audio",
+  values: ['gs0','gs1','gs2','gs3','gs4','gs5','gs6','gs7','gs8']
+}
+
+
+    for( i=0 ; i<audioStim.values.length ; i++) {
+      var audio = new Audio();
+      var audioExt = (audio.canPlayType('audio/mpeg;')) ? "ogg":"mp3";  
+      audio.src = 'stimuli/audio/'+ audioStim.values[i] + '.' + audioExt;    
+      audioStim.values[i] = audio;       
+    }
+
+
+var stimuli = [positionStim, audioStim];
+
+
+//  
+
+
+var gameState = "stopped"; // Track playing game or not
 var start;
 
 var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua'];
@@ -19,12 +50,12 @@ var answerArr = []; //contains players answers
 var matchArr = []; //contains number of matches
 var wrongArr = []; //contains number of wrong clicks
 var playedGames = [];
-var gameSquares = document.getElementById("settingSquares").value;
+//var gameSquares = document.getElementById("settingSquares").value;
 
 var stimPositionSetting = [];
 
-var back = document.getElementById("settingNBack").value; //Number of N-back
-var rounds = document.getElementById("settingRounds").value; //Number of rounds per game
+//var back = document.getElementById("settingNBack").value; //Number of N-back
+//var rounds = document.getElementById("settingRounds").value; //Number of rounds per game
 
 var i; //Iterator for gameloop
 var r; //Iterator for randomization
@@ -38,12 +69,36 @@ var progressCounter;
 var x;  //What round we are on
 var rnd; //randomization number
 
+// Default Player Settings (should only be here first time playing)
+var playerSettings = {
+  back    : 3,
+  rounds  : 15,
+  matches : 0.5,
+  squares : 9
+};
+
+// Load player score
+  //
+  //
+  var playedGames = JSON.parse(localStorage.getItem('playedgames')); // Try to get local storage item
+
+// Load settings
+  if (localStorage.getItem('playersettings')) {
+    playerSettings = JSON.parse(localStorage.getItem('playersettings'));
+  }
+  
+  document.getElementById("settingMatchPercent").value = playerSettings.matches;
+  document.getElementById("settingRounds").value = playerSettings.rounds;
+  document.getElementById("settingSquares").value = playerSettings.squares;
+  document.getElementById("settingNBack").value = playerSettings.back;
+
+
 function setupGame() {
 
-  matchPercent = document.getElementById("settingMatchPercent").value;
-  rounds = document.getElementById("settingRounds").value;
-  gameSquares = document.getElementById("settingSquares").value;
-  back = document.getElementById("settingNBack").value; 
+  matchPercent = playerSettings.matches;
+  rounds = playerSettings.rounds;
+  gameSquares = playerSettings.squares;
+  back = playerSettings.back;
 
   x=0;
   i=0;  
@@ -59,11 +114,11 @@ function setupGame() {
   stimPosition.length = 0;
   score.setAttribute("value", 0); 
 
-  console.log('at beginning of function setupgame, matchArr is '+matchArr);
-  console.log('at beginning of function setupgame, levelArray is '+levelArray);
+  //console.log('at beginning of function setupgame, matchArr is '+matchArr);
+  //console.log('at beginning of function setupgame, levelArray is '+levelArray);
   rnd=0;
 
-  // This routine is supposed to generate game squares based on stimposition length
+  // generate game squares based on stimposition length
   //
   var squareshtml = "";
   for (i=0 ; i < gameSquares ; i++) {
@@ -74,98 +129,50 @@ function setupGame() {
       squareshtml += "<br>";
     }
   }
-  console.log(squareshtml);
+  //console.log(squareshtml);
 
-    console.log('this many stimpositions'+stimPosition);
+  //console.log('this many stimpositions'+stimPosition);
   gamesquares.innerHTML = squareshtml;
   //
 
-
+  //////////////////////////
+  // Generate all the rounds
   for ( r=0 ; r<rounds ; r++ ) {       //Loop that enables percent matches per game to equal matchPercent, and 
-                      //generates random stimuli in the other cases, then pushes those positions to levelArray
-    rnd = Math.random();
-    console.log('r is' + r + 'and rnd is ' + rnd);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
-    if ((rnd < matchPercent) && (r >= (back))) {    // ATT GÖRA: LÄGG TILL ELSE IFS FÖR ATT GENERERA FORCED MATCHING AV BARA COLOR ELLER POSITION
+                                       //generates random stimuli in the other cases, then pushes those positions to levelArray
+    
+    //console.log('r is' + r + 'and rnd is ' + rnd);                    //generates random stimuli in the other cases, then pushes those positions to levelArray
+    if ((Math.random() < matchPercent) && (r >= (back))) {    // ATT GÖRA: LÄGG TILL ELSE IFS FÖR ATT GENERERA FORCED MATCHING AV BARA COLOR ELLER POSITION
     
       levelArray[r] = levelArray[r-back];
       matchArr.push(1);
-      console.log(levelArray[r-back]);
+      //console.log(levelArray[r-back]);
       synthMatch++;
 
     } else {        // ATT GÖRA: LÄGG IN TRACKING AV NATURLIGA MATCHES SOM PUSHAS TILL matchArr!!!!
-      rndColor = Math.floor(Math.random() * ( stimColor.length));
-      rndPosition = Math.floor(Math.random() * ( stimPosition.length));
 
-      levelArray.push([rndPosition, rndColor]);
-      //console.log(levelArray[i-back]);
-        
+      var rndStim = new Array();
+      // Iterate through the stimuli options
+      for (i=0 ; i<stimuli.length ; i++) {
+       rndStim[i] = Math.floor(Math.random() * ( stimuli[i].values.length ));
+       if ((r >= back) && rndStim[i] === levelArray[r-back][i]) matchArr.push(2); // A natural match on one stimuli 
+      }
 
-        if((r >= (back)) && (rndColor === levelArray[r-back][1]) ){
+      levelArray.push(rndStim);
+      //console.log(levelArray);
 
-          matchArr.push(2);
-
-          console.log('A natural match!');
-        }
-        else if((r >= (back)) && (rndPosition === levelArray[r-back][0])){
-
-          matchArr.push(3);
-
-          console.log('A natural match!');
-        }
-
-          else if((r >= (back)) && (levelArray[r] ===  levelArray[r-back])){
-
-            matchArr.push(4);
-
-          console.log('A natural match!');
-          };
+      if ((r >= back) && rndStim === levelArray[r-back]) matchArr.push(4) // A natural match on all stimuli        
 
     };
 
-
   };
-
-
-    console.log('matchArr contains ' + matchArr);
-    console.log('levelArray contains ' +levelArray);
-
-
-
-  console.log (matchArr); //logs contents of matcharray
+    
   console.log (matchArr.length + ' matches in this round. Whereof '+synthMatch+' are synthetic, and '+(matchArr.length-synthMatch)+' are natural!'); //logs number of synthetic matches
 
-  // Handle the display of latest score
-  //
-  //
-  var playedGames = JSON.parse(localStorage.getItem('playedgames')); // Try to get local storage item
+};
 
-  if (playedGames) {     // This conditional will display all your saved results in the gamescreen
-
-    console.log (playedGames);
-
-    game = "<table>";
-
-    for (y=0 ; y < playedGames.length; y++) {
-      game += "<tr>";
-      game += "<td>" + y + "</td>";
-      game += "<td>" + playedGames[y].time + "</td>";
-      game += "<td>" + playedGames[y].scorepercent + "</td>";
-      game += "<td>" + playedGames[y].config.nback + "</td>";
-      game += "<td>" + playedGames[y].config.matchpercent + "</td>";
-      game += "</tr>";
-    }
-    game += "</table>";
-    console.log(game);
-    result.innerHTML = game;
-  } else {
-    playedGames = [];
-  }
-}
-
-//setupGame();
-//start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+document.addEventListener("change", changeTrack);
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
-
+setupGame(); 
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -177,9 +184,9 @@ document.addEventListener('click', clickTrack, false); // Capture all click even
 
 function setColor() {   //function to set color and position based on what's in levelArray, called by var start
 
-   if (x <= rounds){ 
+  if (x <= rounds){ 
 
-    console.log('x is now at' + x);
+     //console.log('x is now at' + x);
     
     for (z = 0; z < stimPosition.length; z++) {
       
@@ -189,24 +196,28 @@ function setColor() {   //function to set color and position based on what's in 
 
     //console.log ('Round count ' + (x+1));
     //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
-   if(x < rounds){  
-    progressCounter = (x+1) + '/' + rounds;
-    roundscount.innerHTML = progressCounter;
-    currentBack.innerHTML = back+'-back';
-    //console.log(levelArray);
-    document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
+    if(x < rounds){  
+      progressCounter = (x+1) + '/' + rounds;
+      roundscount.innerHTML = progressCounter;
+      currentBack.innerHTML = back+'-back';
+      //console.log(levelArray);
+      
+      if (stimuli[1].type == "audio") stimuli[1].values[levelArray[x][1]].play();
+      
+      document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
       document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "1ms"; 
-            };
+    };
                              
-    }else{
-      console.log('Level complete, stopping engine');
-      console.log(answerArr);
-      console.log("interval "+ start);
+  } else {
+      //console.log('Level complete, stopping engine');
+      //console.log(answerArr);
+      //console.log("interval "+ start);
       clearInterval(start); // stops engine after x is above rounds
-      console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!\n You had '+wrongArr.length+' incorrect answers.');  //logs number of correct answers
+      play.innerHTML = "Play";
+      //console.log('Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible!\n You had '+wrongArr.length+' incorrect answers.');  //logs number of correct answers
         document.getElementById("showResult").innerHTML = 'Your scored '+answerArr.length+' right, out of '+matchArr.length+' possible! <br> You had '+wrongArr.length+' incorrect answers.';
       
-       console.log('Your matchArr now contains '+matchArr); 
+       //console.log('Your matchArr now contains '+matchArr); 
         var game = {
           time: Date(),
           scorepercent: answerArr.length,
@@ -227,6 +238,67 @@ function setColor() {   //function to set color and position based on what's in 
 
 
 
+// Returns an HTML string with a table of results based on global variable playedGames which loads from local storage
+function playedGamesHTML () {
+
+  if (playedGames) {     // This conditional will display all your saved results in the gamescreen
+
+    console.log (playedGames);
+
+    game = "<table style='width:100%'><tr><td>Game</td><td>Date</td><td>Score</td><td>Back</td><td>Match Percent</td></tr>";
+
+    for (y=0 ; y < playedGames.length; y++) {
+      game += "<tr>";
+      game += "<td>" + (y+1) + "</td>";
+      game += "<td>" + playedGames[y].time + "</td>";
+      game += "<td>" + playedGames[y].scorepercent + "</td>";
+      game += "<td>" + playedGames[y].config.nback + "</td>";
+      game += "<td>" + playedGames[y].config.matchpercent + "</td>";
+      game += "</tr>";
+    }
+    game += "</table>";
+    //console.log(game);
+    return game;
+  } else {
+    playedGames = []; // Reinitialize to empty array so that the game can save to it
+    return false;
+  }
+
+}
+
+/////////////////
+// Change Tracking
+// Track when typing in certain forms to save the values
+function changeTrack (ev) {  
+  switch (ev.target.id) {
+    case "settingNBack":      
+      // Update global var
+      playerSettings.back = ev.target.value;
+      // Update local storage
+      localStorage.setItem('playersettings', JSON.stringify(playerSettings)); 
+      console.log(ev.target.id + ' ' + ev.target.value);
+    break;
+    case "settingMatchPercent":
+      // Update global var
+      playerSettings.matches = ev.target.value;
+      // Update local storage
+      localStorage.setItem('playersettings', JSON.stringify(playerSettings)); 
+      console.log(ev.target.id + ' ' + ev.target.value);
+    break;
+    case "settingSquares":
+      playerSettings.squares = ev.target.value;
+      // Update local storage
+      localStorage.setItem('playersettings', JSON.stringify(playerSettings)); 
+      console.log(ev.target.id + ' ' + ev.target.value);
+    break;
+    case "settingRounds":
+      playerSettings.rounds = ev.target.value;
+      // Update local storage
+      localStorage.setItem('playersettings', JSON.stringify(playerSettings)); 
+      console.log(ev.target.id + ' ' + ev.target.value);
+    break;
+  }
+}
 
 
 /////////////////
@@ -234,72 +306,100 @@ function setColor() {   //function to set color and position based on what's in 
 // Track only when clicking on certain objects (id in this example)
 //
 
-function clickTrack (ev) {
-  switch (ev.target.id) {
-    case "trackposition":
-      if (levelArray[x-1][0] == levelArray[x-back-1][0]) {  //checks if your click was correct
-        console.log('Matched Position!');
-        answerArr.push(1); // pushes correct answers to answerArr
-        score.setAttribute("value", (answerArr.length/matchArr.length)*100);
-      }
-      else {
-        wrongArr.push(1);
-      }
-      console.log('click pos at ' + x);
-      
-      i++;
+function clickTrack (ev) {  
+    switch (ev.target.id) {
+      case "trackposition":
+        if (gameState == "playing") {
+          if (levelArray[x-1][0] == levelArray[x-back-1][0]) {  //checks if your click was correct
+            console.log('Matched Position!');
+            answerArr.push(1); // pushes correct answers to answerArr
+            score.setAttribute("value", (answerArr.length/matchArr.length)*100);
+          }
+          else {
+            wrongArr.push(1);
+          }
+          console.log('click pos at ' + x);        
+        }
 
-    break;
-    case "trackcolor":
-      if (levelArray[x-1][1] == levelArray[x-back-1][1]) {
-        console.log('Matched Color!');
-        answerArr.push(1);
-        score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
-      }
-      else {
-        wrongArr.push(1);
-      }
-      console.log('click col at ' + x);
-      console.log('round-back is' + (x-back));
-      
-      i++;
+      break;
+      case "trackcolor":
+        if (gameState == "playing") {
+          if (levelArray[x-1][1] == levelArray[x-back-1][1]) {
+            console.log('Matched Color!');
+            answerArr.push(1);
+            score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
+          }
+          else {
+            wrongArr.push(1);
+          }
+          console.log('click col at ' + x);
+        }       
 
-    break;
-    case "trackall":
-      if (levelArray[x-1][1] == levelArray[x-back-1][1] && levelArray[x-1][0] == levelArray[x-back-1][0]) {
-        console.log('Matched all!');
-        answerArr.push(1);
-        score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
-      }
-      else {
-        wrongArr.push(1);
-      }
-      console.log('click all at ' + x);
-      
-      i++;
+      break;
+      case "trackall":
+        if (gameState == "playing") {
+          if (levelArray[x-1][1] == levelArray[x-back-1][1] && levelArray[x-1][0] == levelArray[x-back-1][0]) {
+            console.log('Matched all!');
+            answerArr.push(1);
+            score.setAttribute("value", (answerArr.length/matchArr.length)*100); 
+          }
+          else {
+            wrongArr.push(1);
+          }
+          console.log('click all at ' + x);
+        }        
 
-    break;
-    case "play":
+      break;
+      case "play":
+        switch (gameState) {
+          case "stopped":
+            play.innerHTML = "Pause";
+            gameState = "playing";
+            setupGame();
+            start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+          break;
+          case "playing":
+            console.log("received playing");
+            play.innerHTML = "Play";
+            gameState = "paused";
+            clearInterval(start);
+          break;
+          case "paused":
+            play.innerHTML = "Pause";
+            gameState = "playing";
+            start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+          break;
+        }          
+      break;
+      case "restart":
+        console.log('matchArr is '+matchArr);
+        console.log(JSON.stringify(start));
 
-      clearInterval(start); // stops engine after x is above rounds
-      document.getElementById("showResult").innerHTML = "";
-      setupGame();  
-      start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
-      
-    break;
-    case "restart":
-      console.log('matchArr is '+matchArr);
-      console.log(JSON.stringify(start));
-      clearInterval(start); // stops engine after x is above rounds
-      document.getElementById("showResult").innerHTML = "";
-      setupGame();  
-      start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
-      
+        gameState = "playing";
+        play.innerHTML = "Pause";        
+        clearInterval(start); // stops engine after x is above rounds
+        document.getElementById("showResult").innerHTML = "";
+        setupGame();
+        start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+      break;
+      case "stop":
+        clearInterval(start);
+        play.innerHTML = "Play";
+        gameState = "stopped";        
+      break;
+      case "currentBack":        
 
-    break;
-    case "stop":
-    clearInterval(start);
+        scores.style.display = "block";
+        closer.style.display = "block";
+        
+        scores.innerHTML = playedGamesHTML();
+      break;
+      case "closer":
+        scores.style.display = "none";
+        closer.style.display = "none";
+      break;
+    }
 
-    break;
-  }
 };
+
+
