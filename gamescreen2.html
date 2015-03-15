@@ -10,6 +10,7 @@
   <body>  
 
     <div id="roundscount"></div>
+    <div id="currentBack"></div>
     <progress id="score" value="0" max="100">
 </progress>
 
@@ -30,12 +31,15 @@
     <div style="margin-top: 40px;">
       <button id="play" class="buttonsquare" style="background-color:green;color:#fff;border-color:aquamarine;">Play</button>
       <button id="restart" class="buttonsquare" style="background-color:orange;color:#fff;border-color:yellow;">Restart</button>
+      <button id="stop" class="buttonsquare" style="background-color:red;color:#fff;border-color:yellow;">Stop</button>
     </div>
 
     <div style="margin-top: 20px;">
-      <label>Match Percent</label> <input id="settingMatchPercent" type="number" placeholder="Match Percent" /><br/>
-      <label>X Back</label> <input id="settingNBack" type="number" placeholder="X Back" /><br/>
-      <label>Board Size</label> <input id="settingSquares" type="number" placeholder="Board Size" />
+      <label for="settingMatchPercent">Match Percent</label> <input id="settingMatchPercent" type="number" min="0.01" max="1" value="0.3" step="0.1" placeholder="Match Percent" /><br/>
+      <label for="settingNBack">X Back</label> <input id="settingNBack" type="number" min="1" placeholder="X Back" /><br/>
+      <label for="settingSquares">Board Size</label> <input id="settingSquares" type="number" min="1" placeholder="Board Size" />
+      <br/>
+      <label for="settingRounds">Rounds</label> <input id="settingRounds" type="number" min="1" value="10" placeholder="Rounds" />
     </div>
 
     <div id="result"></div>

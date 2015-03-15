@@ -2,7 +2,7 @@
 // Möjlighet att växla stimuli, ändra antal positioner
 // Settings controls
 // Förfina databasen så den innehåller ALLT vi behöver, och displayar som vi vill
-// Startknapp och restartknapp
+// Pause-knapp
 
 
 // Monte carlo simulation
@@ -14,23 +14,24 @@ var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua'];
 //var stimPosition = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
 var stimPosition = [];
 var levelArray = [];    //Empty array to store the stimuli of each round
-var matchPercent = 0.3; //Desired percent matches
+var matchPercent = document.getElementById("settingMatchPercent").value; //Desired percent matches
 var answerArr = []; //contains players answers
 var matchArr = []; //contains number of matches
 var wrongArr = []; //contains number of wrong clicks
 var playedGames = [];
-var gameSquares = 9;
+var gameSquares = document.getElementById("settingSquares").value;
 
 var stimPositionSetting = [];
 
-var back = 3; //Number of N-back
-var rounds = 10; //Number of rounds per game
+var back = document.getElementById("settingNBack").value; //Number of N-back
+var rounds = document.getElementById("settingRounds").value; //Number of rounds per game
 
 var i; //Iterator for gameloop
 var r; //Iterator for randomization
 var synthMatch = null; // counts number of synthetic matches
 var rndColor;
 var rndPosition;
+var progressCounter;
 
 //localStorage.removeItem('playedgames');
 
@@ -38,6 +39,11 @@ var x;  //What round we are on
 var rnd; //randomization number
 
 function setupGame() {
+
+  matchPercent = document.getElementById("settingMatchPercent").value;
+  rounds = document.getElementById("settingRounds").value;
+  gameSquares = document.getElementById("settingSquares").value;
+  back = document.getElementById("settingNBack").value; 
 
   x=0;
   i=0;  
@@ -156,8 +162,8 @@ function setupGame() {
   }
 }
 
-setupGame();
-start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+//setupGame();
+//start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
 document.addEventListener('click', clickTrack, false); // Capture all click events with event listener
 
 
@@ -184,8 +190,9 @@ function setColor() {   //function to set color and position based on what's in 
     //console.log ('Round count ' + (x+1));
     //console.log ('Position ' + (levelArr[x][1]+1) + ' Color ' + colors[levelArr[x][0]]);
    if(x < rounds){  
-    var progressCounter = (x+1) + '/' + rounds;
+    progressCounter = (x+1) + '/' + rounds;
     roundscount.innerHTML = progressCounter;
+    currentBack.innerHTML = back+'-back';
     //console.log(levelArray);
     document.getElementById(stimPosition[levelArray[x][0]]).style.backgroundColor = stimColor[levelArray[x][1]];  // sets color and position for square
       document.getElementById(stimPosition[levelArray[x][0]]).style.transitionDuration = "1ms"; 
@@ -273,15 +280,25 @@ function clickTrack (ev) {
 
     break;
     case "play":
-      //var start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+
+      clearInterval(start); // stops engine after x is above rounds
+      document.getElementById("showResult").innerHTML = "";
+      setupGame();  
+      start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
+      
     break;
     case "restart":
       console.log('matchArr is '+matchArr);
       console.log(JSON.stringify(start));
       clearInterval(start); // stops engine after x is above rounds
+      document.getElementById("showResult").innerHTML = "";
       setupGame();  
       start = setInterval(function(){ setColor() }, 2000); // starts engine, runs it every 2 seconds
       
+
+    break;
+    case "stop":
+    clearInterval(start);
 
     break;
   }

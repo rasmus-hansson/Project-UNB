@@ -95,6 +95,20 @@ html {
    }
 
 
+#roundscount {
+
+  float: left;
+    margin-right: 8px;
+
+}
+
+#currentBack {
+
+  
+    margin-left: 108px;
+
+}
+
 #trackposition {
 
 	background-color: #ff69b4;
@@ -118,8 +132,8 @@ html {
 	font-family: Garamond, serif;
 	font-size: 1.5em;
 	position: absolute;
-	margin-left: 10em;
-	margin-top: -6em;
+	margin-left: 30em;
+	margin-top: -10em;
 }
 
 #showResult {
@@ -129,7 +143,7 @@ html {
   font-size: 1.5em;
   position: absolute;
   margin-left: 10em;
-  margin-top: -6em;
+  margin-top: -8em;
 
 }
 
