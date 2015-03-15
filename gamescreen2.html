@@ -3,16 +3,17 @@
 <html>
 
   <head>
+    <meta charset="utf8" />
   <link rel="stylesheet" type="text/css" href="stylesheetgame.css" />
      <title>Gamescreen</title>
   </head>
 
-  <body>  
+  <body> 
+    <div id="closer" style="background-color: #eee; padding: 20px; border-radius: 50%; z-index: 100; display: none; position: absolute; top: 45px; right: 45px; font-size: 45px;">X</div>  
 
     <div id="roundscount"></div>
-    <div id="currentBack"></div>
-    <progress id="score" value="0" max="100">
-</progress>
+    <div id="currentBack">XBack</div>
+    <progress id="score" value="0" max="100"></progress>
 
     <br>
     <br>
@@ -49,7 +50,10 @@
       <h4><a href="index.html" style="position: relative; margin-left: 73em;">Tillbaka</a></h4>
     </div>
 
- <script type="text/javascript" src="script2.js"></script>
+    <div id="scores" style="display:none; position: absolute; left: 0; top: 0;  width: 100%; height: 100%; background-color: #fff;">
+    </div>
+
+    <script type="text/javascript" src="script2.js"></script>
  
 
   </body>
