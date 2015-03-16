@@ -8,6 +8,7 @@
 // Monte carlo simulation
 // graphics
 
+
 var colorStim = {
   type: "color",
   values: ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua']
@@ -19,7 +20,7 @@ var audioStim = {
 }
 
 var positionStim = {
-  type: "audio",
+  type: "position",
   values: ['gs0','gs1','gs2','gs3','gs4','gs5','gs6','gs7','gs8']
 }
 
@@ -32,7 +33,19 @@ var positionStim = {
     }
 
 
-var stimuli = [positionStim, audioStim];
+var preStimuliOne = document.getElementById("stimuliOne").value; // Retrieves user choice of stimuli
+var preStimuliTwo = document.getElementById("stimuliTwo").value;
+var stimuliOne;  // Declaring variable for storing converted user choice as per the switch statement below
+var stimuliTwo;
+
+
+console.log(stimuliOne);
+console.log(stimuliTwo);
+
+var stimuli = [stimuliOne, stimuliTwo];
+
+console.log(stimuli);
+
 
 
 //  
@@ -41,7 +54,7 @@ var stimuli = [positionStim, audioStim];
 var gameState = "stopped"; // Track playing game or not
 var start;
 
-var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua'];
+var stimColor = ['Purple','Green','Orange','Yellow', 'Red', 'Pink','Aqua','Gray','Black'];
 //var stimPosition = [gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8, gs9];
 var stimPosition = [];
 var levelArray = [];    //Empty array to store the stimuli of each round
@@ -95,6 +108,15 @@ var playerSettings = {
 
 function setupGame() {
 
+
+  
+    preStimuliOne = document.getElementById("stimuliOne").value; // Retrieves user choice of stimuli
+    preStimuliTwo = document.getElementById("stimuliTwo").value;
+
+
+
+  stimuli = [stimuliOne, stimuliTwo];
+
   matchPercent = playerSettings.matches;
   rounds = playerSettings.rounds;
   gameSquares = playerSettings.squares;
@@ -114,9 +136,49 @@ function setupGame() {
   stimPosition.length = 0;
   score.setAttribute("value", 0); 
 
-  //console.log('at beginning of function setupgame, matchArr is '+matchArr);
-  //console.log('at beginning of function setupgame, levelArray is '+levelArray);
+
   rnd=0;
+
+
+switch(preStimuliOne) {   // This switch statement only serves to convert the input from HTML from string to object,
+                          // as I sadly found no other way!
+case "positionStim":
+stimuliOne = positionStim;
+break;
+case "colorStim":
+stimuliOne = colorStim;
+break;
+case "audioStim":
+stimuliOne = audioStim;
+break;
+default:
+stimuliOne = positionStim;
+
+}
+
+switch(preStimuliTwo) {
+
+
+case "positionStim":
+stimuliTwo = positionStim;
+break;
+case "colorStim":
+stimuliTwo = colorStim;
+break;
+case "audioStim":
+stimuliTwo = audioStim;
+break;
+default:
+stimuliTwo = positionStim;
+
+
+}
+
+
+
+stimuli = [stimuliOne, stimuliTwo];
+
+
 
   // generate game squares based on stimposition length
   //
