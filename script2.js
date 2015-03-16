@@ -282,7 +282,7 @@ function setColor() {   //function to set color and position based on what's in 
        //console.log('Your matchArr now contains '+matchArr); 
         var game = {
           time: Date(),
-          scorepercent: answerArr.length,
+          scorepercent: ((answerArr.length)/(matchArr.length) + '%'),
           config: {
             nback: back,
             matchpercent: matchPercent
