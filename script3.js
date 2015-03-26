@@ -15,7 +15,7 @@ var playerParams = {
 var gameParams = {
 	stimuli: ["green","blue","purple","black","orange","red"],
 	stimuliShow: 1500,
-	stimuliDelay: 200,
+	stimuliDelay: 550,
 	boardSize: 1,
 	nBack: 2,
 	matchChance: 0.3,
@@ -40,7 +40,7 @@ function genStimuli () {
 		return playerParams.result[0].trail[gameParams.nBack-1];
 	} else {
 		// ensure non repeating stimuli
-		var temp = 0;
+		var temp = null;
 		do {
 			temp = Math.floor(Math.random() * ( gameParams.stimuli.length ));
 		} while (temp === playerParams.result[0].trail[0]);
@@ -52,8 +52,8 @@ function genStimuli () {
 
 function displayRound () {
 	if (playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
-		gameOver();	
-    }    
+		gameOver();
+    }
 
 	var currentStimuli = genStimuli();
 	var currentPosition = document.getElementById("gameboard").childNodes[0];	
@@ -130,7 +130,7 @@ function clickTrack (ev) {
       		break;     		
       	}
 
-      	if (playerParams.result[0].trail[gameParams.nBack] && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack]) {
+      	if (playerParams.result[0].trail.length >= gameParams.nBack && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack]) {
       		playerParams.result[0].score++;
       		gameParams.streaking = true;
       		document.getElementById("gameboard").childNodes[0].innerHTML = playerParams.result[0].score;
