@@ -2,6 +2,16 @@ html {
 	background-color: #cd3d7c;	
 }
 
+.nback_select {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	width: 32px;
+	height: 32px;
+	background-color: #fff;
+	border-right: 1px solid #cd3d7c;
+}
+
 .cell {
 	display: table-cell;
 	vertical-align: middle;

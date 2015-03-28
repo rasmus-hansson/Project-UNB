@@ -11,6 +11,10 @@ var playerParams = {
 	result: []
 }
 
+var gameConfig = {
+	nBack: 9
+}
+
 
 var gameParams = {
 	stimuli: ["green","blue","purple","black","orange","red"],
@@ -23,6 +27,13 @@ var gameParams = {
 	start: null
 };
 
+function showConfig () {
+	var cells = "";
+	for (i=2 ; i<=gameConfig.nBack ; i++) {
+		cells += "<div id='" + i + " back' class='nback_select'>"+i+"</div>";
+	}
+	nback.innerHTML = cells;	
+}
 
 function setupBoard () {
 	var cells = "";
@@ -155,6 +166,7 @@ var forceRedraw = function(element){
 
 document.addEventListener('click', clickTrack, false);
 setupBoard();
+showConfig();
 loadResult();
 
 function InitChart() {
