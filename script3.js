@@ -7,6 +7,7 @@
 // Hypotes: Spelglädjen sitter i enkelheten 
 // och förmågan att kunna på ett enkelt sätt kunna mäta sin minnesförbättring
 
+// TODO: Connect nBack config with game in an appropriate way
 // TODO: Average score per day
 // TODO: Group scores per nBack level
 
@@ -16,8 +17,10 @@ var playerParams = {
 	result: []
 }
 
+// Constants
 var gameConfig = {
-	nBack: 9
+	nBack: 9,
+	boarSize: 1 // For future use
 }
 
 
@@ -124,7 +127,7 @@ function saveResult () {
 function startGame () {
 	playerParams.result.unshift({
 		game: playerParams.result.length,
-		date: Date(),
+		date: new Date().getTime(),
 		nback: gameParams.nBack,
 		score: 0,
 		trail: []
