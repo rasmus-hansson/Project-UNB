@@ -1,29 +1,36 @@
+//////////////
+// Refactor 1:
+// Huvudmål
 // Snygga upp koden
 // Förenkla hela spelet
 
+// Delmål
 // Minimera confusion, speciellet med variabler och arrayer
 // Samla och strukturera koden
 // Försöka hitta spelglädjen
-// Hypotes: Spelglädjen sitter i enkelheten 
-// och förmågan att kunna på ett enkelt sätt kunna mäta sin minnesförbättring
+
+///////////
+// Hypotes 1: Spelglädjen sitter i enkelheten och
+// förmågan att kunna på ett enkelt och fint sätt
+// mäta sin minnesförbättring
 
 // TODO: Connect nBack config with game in an appropriate way
 // TODO: Average score per day
-// TODO: Group scores per nBack level
+// TODO: Separate scores by nBack level
 
 
 var playerParams = {
 	name: "Rasmus",
-	result: []
+	result: []	// Resultatet lagras efer varje spel i denna array
 }
 
 // Constants
 var gameConfig = {
-	nBack: 9,
-	boarSize: 1 // For future use
+	nBack: 9,   // Används för att visa UI
+	boarSize: 1 // For future use!?
 }
 
-
+// Vanliga spelparametrar
 var gameParams = {
 	stimuli: ["green","blue","purple","black","orange","red"],
 	stimuliShow: 1500,
@@ -31,10 +38,11 @@ var gameParams = {
 	boardSize: 1,
 	nBack: 2,
 	matchChance: 0.3,
-	streaking: false,
-	start: null
+	streaking: false,	// Den här variabeln avgör ifall man dör när man är inaktiv
+	start: null			// Konstig workaround för att få setInterval och clear att funka
 };
 
+// En UI funktion som visar val av nBack
 function showConfig () {
 	var cells = "";
 	for (i=2 ; i<=gameConfig.nBack ; i++) {
@@ -43,6 +51,7 @@ function showConfig () {
 	nback.innerHTML = cells;	
 }
 
+// En UI funktion som skapar spelplanen (loopar helt i önödan just nu)
 function setupBoard () {
 	var cells = "";
 	for (i=0 ; i<gameParams.boardSize ; i++) {
@@ -53,6 +62,7 @@ function setupBoard () {
 }
 
 
+// En funktion som returnerar ett stimuli baserat på matchChance
 function genStimuli () {
 	if (Math.random() < gameParams.matchChance && playerParams.result[0].trail.length > gameParams.nBack) {		
 		//console.log (playerParams.result[0].trail[gameParams.nBack-1]);
@@ -68,7 +78,7 @@ function genStimuli () {
 	}
 }
 
-
+// Detta är spelloopen. Kör en runda för tusan!
 function displayRound () {
 	if (playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
 		gameOver();
@@ -103,11 +113,11 @@ function gameOver () {
 	saveResult();
 	loadResult();
 
-	forceRedraw(window);
+	forceRedraw(window); // Osnygg kod som bör ersättas. Om den utkommenteras så uppdaterar inte game over UI i alla lägen
 }
 
 function loadResult () {
-	//localStorage.removeItem('result');
+	//localStorage.removeItem('result'); // Debug funktion för att rensa local storage
 
 	var storResult = localStorage.getItem('result');
 	if (storResult) {
@@ -161,7 +171,7 @@ function clickTrack (ev) {
     }
  }
 
-
+// Pissfunktion som ska tvinga skärmuppdatering vid gameover sekvens
 var forceRedraw = function(element){
   var disp = element.style.display;
   element.style.display = 'none';
@@ -169,14 +179,7 @@ var forceRedraw = function(element){
   element.style.display = disp;
 };
 
-
-
-
-document.addEventListener('click', clickTrack, false);
-setupBoard();
-showConfig();
-loadResult();
-
+// D3 funktion som generar och printar ut en line chart baserat på resultat
 function InitChart() {
 
 	var vis = d3.select("#visualisation"),
@@ -229,7 +232,16 @@ function InitChart() {
 		.attr('stroke-width', 2)
 		.attr('fill', 'none');	
 }
+
+// Flödesschema för call-stacken
+document.addEventListener('click', clickTrack, false);
+setupBoard();
+showConfig();
+loadResult();
 InitChart();
+
+
+
 
 
 
