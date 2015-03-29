@@ -4,8 +4,13 @@
 // Minimera confusion, speciellet med variabler och arrayer
 // Samla och strukturera koden
 // Försöka hitta spelglädjen
+// Hypotes: Spelglädjen sitter i enkelheten 
+// och förmågan att kunna på ett enkelt sätt kunna mäta sin minnesförbättring
 
-// Player config
+// TODO: Average score per day
+// TODO: Group scores per nBack level
+
+
 var playerParams = {
 	name: "Rasmus",
 	result: []
