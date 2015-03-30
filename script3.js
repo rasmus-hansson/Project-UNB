@@ -33,8 +33,8 @@ var gameConfig = {
 // Vanliga spelparametrar
 var gameParams = {
 	stimuli: ["green","blue","purple","black","orange","red"],
-	stimuliShow: 1500,
-	stimuliDelay: 550,
+	stimuliShow: 1200,
+	stimuliDelay: 500,
 	boardSize: 1,
 	nBack: 2,
 	matchChance: 0.3,
@@ -136,6 +136,7 @@ function saveResult () {
 
 function startGame () {
 	playerParams.result.unshift({
+		player: playerParams.name,
 		game: playerParams.result.length,
 		date: new Date().getTime(),
 		nback: gameParams.nBack,
@@ -239,6 +240,47 @@ setupBoard();
 showConfig();
 loadResult();
 InitChart();
+
+var tempDate = 0;
+//console.log(temp.getTime());
+//console.log(temp.setHours(0));
+
+//console.log(new Date(temp.getTime() - temp.setHours(0,0,0,0)));
+
+// Get the first date (oldest)
+// Find out how much time before midnight
+
+var revResult = new Array();
+revResult = playerParams.result.slice(0);
+revResult.reverse();
+var score = 0;
+
+var intervalDate = 0;
+var iter = 0;
+
+var avgScore = [];
+
+// Doesn't count the first entry
+for (i=0 ; i < revResult.length ; i++) {		 
+	
+	if (intervalDate == 0) intervalDate = revResult[i].date + 86400000;
+	score += revResult[i].score;
+	iter ++;
+
+	if (revResult[i].date <= intervalDate) {
+			
+	} else {
+		avgScore.push(score / iter);
+		score = 0;
+		iter = 0;
+
+		intervalDate = revResult[i].date + 86400000;		
+	}
+}
+
+if (avgScore.length == 0) avgScore.push(score / iter);
+
+console.log(avgScore);
 
 
 
