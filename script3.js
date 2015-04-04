@@ -48,7 +48,7 @@ function showConfig () {
 	for (i=2 ; i<=gameConfig.nBack ; i++) {
 		cells += "<div id='" + i + " back' class='nback_select'>"+i+"</div>";
 	}
-	nback.innerHTML = cells;	
+	settings.innerHTML = cells;	
 }
 
 // En UI funktion som skapar spelplanen (loopar helt i önödan just nu)
