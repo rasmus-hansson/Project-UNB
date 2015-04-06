@@ -235,11 +235,45 @@ function InitChart() {
 }
 
 // Flödesschema för call-stacken
-document.addEventListener('click', clickTrack, false);
-setupBoard();
-showConfig();
-loadResult();
-InitChart();
+
+loadGame();
+
+function loadGame() {
+	// Load and display splash screen for 3 seconds and/or
+	// Handle asset loading and progress bar
+	// 
+	splash.innerHTML = "<div class='middle'>Loading...</div>";
+
+	setTimeout(loadMenu, 3000);
+
+	function loadMenu() {
+		splash.innerHTML = "";		
+		mainMenu();
+	}
+}
+
+function mainMenu() {
+	document.addEventListener('click', menuTrack, false);
+	menu.innerHTML = "<div class='nav'><button class='btn' id='btn_start'>Play</div></div>";
+
+	function menuTrack (ev) {
+    switch (ev.target.id) {
+      case "btn_start":
+      	menu.innerHTML = "";
+      	document.addEventListener('click', clickTrack, false);
+      	setupBoard();
+      	loadResult();
+      	InitChart();
+      break;
+    }
+ }
+}
+
+//document.addEventListener('click', clickTrack, false);
+//setupBoard();
+//showConfig();
+//loadResult();
+//InitChart();
 
 var tempDate = 0;
 //console.log(temp.getTime());
