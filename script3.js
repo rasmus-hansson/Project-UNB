@@ -52,13 +52,29 @@ function showConfig () {
 }
 
 // En UI funktion som skapar spelplanen (loopar helt i önödan just nu)
-function setupBoard () {
+function drawBoard () {
 	var cells = "";
 	for (i=0 ; i<gameParams.boardSize ; i++) {
 		cells += "<div id='stimtrack' class='cell'></div>";
 	}
-	gameboard.innerHTML = cells;
-	stimtrack.innerHTML = "Tap to Start";
+	game.innerHTML = cells;
+	game.innerHTML += "<div class='nav'><div class='btn' id='btn_match'>+</div></div>";
+	startTimer(3,stimtrack);		
+}
+
+function startTimer(duration, display) {
+    var timer = duration;
+    display.textContent = duration;
+    var interval = setInterval(function () {       
+        
+        display.textContent = timer;        
+
+        if (--timer < 0) {
+        	clearInterval(interval);
+        	display.textContent = "";
+            startGame();
+        }
+    }, 1000);
 }
 
 
@@ -80,12 +96,13 @@ function genStimuli () {
 
 // Detta är spelloopen. Kör en runda för tusan!
 function displayRound () {
+	console.log('interval ' + gameParams.start);
 	if (playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
 		gameOver();
     }
 
 	var currentStimuli = genStimuli();
-	var currentPosition = document.getElementById("gameboard").childNodes[0];	
+	var currentPosition = document.getElementById("game").childNodes[0];	
 	currentPosition.style.backgroundColor = gameParams.stimuli[currentStimuli];
 	currentPosition.innerHTML = playerParams.result[0].score;
 	playerParams.result[0].trail.unshift(currentStimuli);
@@ -97,23 +114,47 @@ function displayRound () {
 
 function gameOver () {
 
+	clearInterval(gameParams.start);
+	console.log('over interval ' + gameParams.start);
+
+	document.removeEventListener('click', clickTrack);
+	document.addEventListener('click', overTrack);
+
 	console.log("dead! current stimuli " + gameParams.stimuli[playerParams.result[0].trail[0]]);
 	console.log("nback stimuli " + gameParams.stimuli[playerParams.result[0].trail[gameParams.nBack]]);
-	
-	var currentPosition = document.getElementById("gameboard").childNodes[0];
-	currentPosition.innerHTML += "<br/>Tap to Restart";
-	currentPosition.style.backgroundColor = '#d24e89';
-	currentPosition.style.backgroundImage = 'url("assets/logo.png")';
 
-	clearInterval(gameParams.start);
+	game_over.className = 'overlay';
+	game_over.innerHTML = "<h1 style='color: #fff;'>Game Over</h1><br/><button class='btn' id='btn_restart'>Restart</button><br/><button class='btn' id='btn_menu'>Menu</button>";
+	
+	var currentPosition = document.getElementById("game").childNodes[0];	
+	currentPosition.style.backgroundColor = '#d24e89';
+
+	
 	
 	gameParams.streaking = false;
 	gameParams.start = null;
 	console.log (playerParams.result);
 	saveResult();
-	loadResult();
 
-	forceRedraw(window); // Osnygg kod som bör ersättas. Om den utkommenteras så uppdaterar inte game over UI i alla lägen
+	function overTrack ( ev ) {
+		switch (ev.target.id) {
+      		case "btn_restart":
+      			game_over.className = '';
+      			game_over.innerHTML = '';
+      			game.innerHTML = '';
+      			document.removeEventListener('click', overTrack); 
+      			prepareGame();
+      			startTimer(3,stimtrack);
+      		break;
+      		case "btn_menu":
+      			game_over.className = '';
+      			game_over.innerHTML = '';
+      			game.innerHTML = '';
+      			document.removeEventListener('click', overTrack); 
+      			mainMenu();
+      		break;
+      	}
+	}
 }
 
 function loadResult () {
@@ -124,8 +165,8 @@ function loadResult () {
 		playerParams.result = JSON.parse(storResult);
 	}
 
-	result.innerHTML = JSON.stringify(playerParams.result).length;
-	result.innerHTML = JSON.stringify(playerParams.result);
+	profile.innerHTML += JSON.stringify(playerParams.result).length;
+	profile.innerHTML += JSON.stringify(playerParams.result);
 }
 
 
@@ -143,7 +184,7 @@ function startGame () {
 		score: 0,
 		trail: []
 	});
-	var currentPosition = document.getElementById("gameboard").childNodes[0];
+	var currentPosition = document.getElementById("game").childNodes[0];
 	currentPosition.style.backgroundImage = 'none';
 
 	gameParams.streaking = true;
@@ -154,34 +195,21 @@ function startGame () {
 
 function clickTrack (ev) {
     switch (ev.target.id) {
-      case "stimtrack":
-      	if (gameParams.start == null) {      		
-      		startGame();
-      		break;     		
-      	}
-
-      	if (playerParams.result[0].trail.length >= gameParams.nBack && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack]) {
+      case "btn_match":
+      	if (gameParams.start != null && playerParams.result[0].trail.length >= gameParams.nBack && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
       		playerParams.result[0].score++;
       		gameParams.streaking = true;
-      		document.getElementById("gameboard").childNodes[0].innerHTML = playerParams.result[0].score;
+      		document.getElementById("game").childNodes[0].innerHTML = playerParams.result[0].score;
       		console.log("score!");
       	} else {
       		gameOver();
       	}
-      break;
+      break;      
     }
  }
 
-// Pissfunktion som ska tvinga skärmuppdatering vid gameover sekvens
-var forceRedraw = function(element){
-  var disp = element.style.display;
-  element.style.display = 'none';
-  var trick = element.offsetHeight;
-  element.style.display = disp;
-};
-
 // D3 funktion som generar och printar ut en line chart baserat på resultat
-function InitChart() {
+function initChart() {
 
 	var vis = d3.select("#visualisation"),
 	WIDTH = 250,
@@ -250,19 +278,43 @@ function loadGame() {
 
 function mainMenu() {
 	document.addEventListener('click', menuTrack, false);
-	menu.innerHTML = "<div class='nav'><button class='btn' id='btn_start'>Play</div></div>";
+	menu.innerHTML = "<div class='nav'><button class='btn' id='btn_start'>Play</button><button class='btn' id='btn_profile'>Profile</button></div>";
 
 	function menuTrack (ev) {
     switch (ev.target.id) {
       case "btn_start":
       	menu.innerHTML = "";
-      	document.addEventListener('click', clickTrack, false);
-      	setupBoard();
-      	loadResult();
-      	InitChart();
+      	document.removeEventListener('click', menuTrack);
+      	prepareGame();
       break;
+      case "btn_profile":
+      	menu.innerHTML = ""; 
+      	document.removeEventListener('click', menuTrack);
+      	showProfile();     	
     }
  }
+}
+
+function showProfile() {
+	profile.innerHTML = "<button class='btn small' id='close'>X</button>";
+    //initChart();
+    loadResult();
+    document.addEventListener('click', profileTrack, false);
+
+    function profileTrack (ev) {
+    	switch (ev.target.id) {
+	    	case "close":
+	    		profile.innerHTML = "";
+	    		document.removeEventListener('click', profileTrack);
+	    		mainMenu();
+	    	break;
+	    }
+    }
+}
+
+function prepareGame() {
+	document.addEventListener('click', clickTrack, false);
+    drawBoard();      	
 }
 
 ////////////////////////////////////////////////////////////////
