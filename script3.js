@@ -231,12 +231,8 @@ function InitChart() {
 		.attr('d', lineGen(playerParams.result))
 		.attr('stroke', 'white')
 		.attr('stroke-width', 2)
-		.attr('fill', 'none');	
+		.attr('fill', 'none');
 }
-
-// Flödesschema för call-stacken
-
-loadGame();
 
 function loadGame() {
 	// Load and display splash screen for 3 seconds and/or
@@ -269,20 +265,12 @@ function mainMenu() {
  }
 }
 
-//document.addEventListener('click', clickTrack, false);
-//setupBoard();
-//showConfig();
-//loadResult();
-//InitChart();
+////////////////////////////////////////////////////////////////
+// The below code is an attempt to collect average score per day
+// Currently not working as expected
+// Initial research is pointing to Map/Reduce solution
 
 var tempDate = 0;
-//console.log(temp.getTime());
-//console.log(temp.setHours(0));
-
-//console.log(new Date(temp.getTime() - temp.setHours(0,0,0,0)));
-
-// Get the first date (oldest)
-// Find out how much time before midnight
 
 var revResult = new Array();
 revResult = playerParams.result.slice(0);
@@ -315,6 +303,12 @@ for (i=0 ; i < revResult.length ; i++) {
 if (avgScore.length == 0) avgScore.push(score / iter);
 
 console.log(avgScore);
+
+
+
+
+// Start the game
+loadGame();
 
 
 
