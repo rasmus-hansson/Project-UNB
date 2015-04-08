@@ -11,6 +11,19 @@ body {
 	overflow-x:hidden;
 }
 
+@font-face {
+    font-family: 'valbold';
+    src: url('assets/font/VAL-webfont.eot');
+    src: url('assets/font/VAL-webfont.eot?#iefix') format('embedded-opentype'),
+         url('assets/font/VAL-webfont.woff2') format('woff2'),
+         url('assets/font/VAL-webfont.woff') format('woff'),
+         url('assets/font/VAL-webfont.ttf') format('truetype'),
+         url('assets/font/VAL-webfont.svg#valbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 h1 {
 	color: #fff;
 }
