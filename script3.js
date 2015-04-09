@@ -18,8 +18,6 @@
 // TODO: Average score per day
 // TODO: Separate scores by nBack level
 
-
-
 var playerParams = {
 	name: "Rasmus",
 	result: []	// Resultatet lagras efer varje spel i denna array
@@ -28,7 +26,7 @@ var playerParams = {
 // Constants
 var gameConfig = {
 	nBack: 9,   // Används för att visa UI
-	boarSize: 1 // For future use!?
+	boardSize: 1 // For future use!?
 }
 
 // Vanliga spelparametrar
@@ -39,21 +37,22 @@ var gameParams = {
 	boardSize: 1,
 	nBack: 2,
 	matchChance: 0.3,
-	streaking: false,	// Den här variabeln avgör ifall man dör när man är inaktiv
+	streaking: false,			// Den här variabeln avgör ifall man dör när man är inaktiv
 	start: undefined			// Konstig workaround för att få setInterval och clear att funka
 };
 
 
-// En UI funktion som visar val av nBack
-function showConfig () {
-	var cells = "";
-	for (i=2 ; i<=gameConfig.nBack ; i++) {
-		cells += "<div id='" + i + " back' class='nback_select'>"+i+"</div>";
-	}
-	settings.innerHTML = cells;	
+
+
+function prepareGame() {
+	document.addEventListener('click', clickTrack, false);
+    drawBoard();      	
 }
 
-// En UI funktion som skapar spelplanen (loopar helt i önödan just nu)
+// En UI funktion som skapar spelplanen och startar spelet
+// (loopar helt i önödan just nu)
+//
+//
 function drawBoard () {
 	var cells = "";
 	for (i=0 ; i<gameParams.boardSize ; i++) {
@@ -64,6 +63,14 @@ function drawBoard () {
 	startTimer(3,stimtrack);		
 }
 
+
+// Start Timer visar en nedräkning med 800ms interval
+//
+// Parameters
+// Duration: Hur många sekunder som ska räknas ned
+// Display: Vilket HTML objekt som ska användas för att visa räknaren
+//
+//
 function startTimer(duration, display) {
     var timer = duration;
     
@@ -73,20 +80,85 @@ function startTimer(duration, display) {
 
         if (--timer < 0) {
         	clearInterval(interval);
-        	display.textContent = "GO";
+        	display.textContent = "READY";
             startGame();
         }
     }, 800);
 }
 
 
-// En funktion som returnerar ett stimuli baserat på matchChance
+
+
+function startGame () {
+	playerParams.result.unshift({
+		player: playerParams.name,
+		game: playerParams.result.length,
+		date: new Date().getTime(),
+		nback: gameParams.nBack,
+		score: 0,
+		trail: []
+	});
+	var currentPosition = document.getElementById("game").childNodes[0];
+	currentPosition.style.backgroundImage = 'none';
+
+	gameParams.streaking = true;
+	gameParams.start = setInterval(function(){ displayRound() }, gameParams.stimuliShow); // starts engine, runs it every 2 seconds
+	console.log("Game Started with id " + gameParams.start);
+}
+
+
+function clickTrack (ev) {
+    switch (ev.target.id) {
+      case "btn_match":
+      	if (gameParams.start != null && playerParams.result[0].trail.length >= gameParams.nBack && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
+      		playerParams.result[0].score++;
+      		gameParams.streaking = true;
+      		document.getElementById("game").childNodes[0].innerHTML = playerParams.result[0].score;
+      		console.log("score!");
+      	} else {
+      		gameOver();
+      	}
+      break;      
+    }
+ }
+
+
+// Detta är spelloopen
+//
+//
+function displayRound () {
+		console.log('interval ' + gameParams.start);
+
+	// Den här rutinen kollar ifall det skulle varit en match
+	// fast spelaren inte hade tryckt på knappan (och aktiverat streaking)
+	if (playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
+		gameOver();
+    }
+
+	var currentStimuli = genStimuli();
+	var currentPosition = document.getElementById("game").childNodes[0];	
+	currentPosition.style.backgroundColor = gameParams.stimuli[currentStimuli];
+	currentPosition.innerHTML = playerParams.result[0].score;
+	playerParams.result[0].trail.unshift(currentStimuli); // Lägg till stimuli i spåret
+		//console.log(playerParams.result[0].trail);
+
+	setTimeout(function(){ currentPosition.style.backgroundColor = '#ddd' }, gameParams.stimuliDelay);
+	gameParams.streaking = false; // Här sätter vi streaking till falskt så att vi kan kolla av resultatet nästa runda 
+}
+
+
+// En funktion som returnerar ett stimuli baserat på matchChance i gameParams
+//
 function genStimuli () {
+	// Om random genererat nummer är mindre än konfigurerad matchChance och
+	// spelet har gått igenom fler rundor än konfigureringen av nback så
+	// kopierar vi värdet som ligger lika många steg rundor tillbaka som nBack
 	if (Math.random() < gameParams.matchChance && playerParams.result[0].trail.length > gameParams.nBack) {		
 		//console.log (playerParams.result[0].trail[gameParams.nBack-1]);
 		return playerParams.result[0].trail[gameParams.nBack-1];
 	} else {
-		// ensure non repeating stimuli
+		// Annars så generar vi ett slumpmässigt stimuli för att visa i spelrundan
+		// Ser samtidigt till att vi inte returnerar samma stimuli som rundan innan
 		var temp = null;
 		do {
 			temp = Math.floor(Math.random() * ( gameParams.stimuli.length ));
@@ -96,24 +168,10 @@ function genStimuli () {
 	}
 }
 
-// Detta är spelloopen. Kör en runda för tusan!
-function displayRound () {
-	console.log('interval ' + gameParams.start);
-	if (playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
-		gameOver();
-    }
 
-	var currentStimuli = genStimuli();
-	var currentPosition = document.getElementById("game").childNodes[0];	
-	currentPosition.style.backgroundColor = gameParams.stimuli[currentStimuli];
-	currentPosition.innerHTML = playerParams.result[0].score;
-	playerParams.result[0].trail.unshift(currentStimuli);
-	//console.log(playerParams.result[0].trail);
-	setTimeout(function(){ currentPosition.style.backgroundColor = '#ddd' }, gameParams.stimuliDelay);
-	gameParams.streaking = false;
-}
-
-
+// Game over
+// Städar upp spelloopen och visar/sparar resultatet
+// Innehåller även en funktion för att tracka input på game over overlay skärmen
 function gameOver () {
 
 	clearInterval(gameParams.start);
@@ -126,11 +184,7 @@ function gameOver () {
 	console.log("dead! current stimuli " + gameParams.stimuli[playerParams.result[0].trail[0]]);
 	console.log("nback stimuli " + gameParams.stimuli[playerParams.result[0].trail[gameParams.nBack]]);
 
-
-
-	var highScore = Math.max.apply(Math,playerParams.result.map(function(o){return o.score;}))
-
-
+	var highScore = Math.max.apply(Math,playerParams.result.map(function(o){return o.score;}));
 
 	game_over.className = 'overlay';
 	game_over.innerHTML = "<div class='middle' style='text-align: center;'>";
@@ -168,10 +222,15 @@ function gameOver () {
 	}
 }
 
+// Load Result
+// Laddar resultat från local storage och printar ut en HTML tabell
+//
+//
 function loadResult () {
 	//localStorage.removeItem('result'); // Debug funktion för att rensa local storage
 
 	// This routine will sort the array of objects to create a highscore list
+	// We have to make sure that we copy the array and modify it rather than modify the existing result array
 	//playerParams.result.sort(function(a,b) { return parseFloat(a.score) - parseFloat(b.score) } );
 
 	var storResult = localStorage.getItem('result');
@@ -202,39 +261,6 @@ function saveResult () {
 		localStorage.setItem('result', JSON.stringify(playerParams.result));
 }
 
-
-function startGame () {
-	playerParams.result.unshift({
-		player: playerParams.name,
-		game: playerParams.result.length,
-		date: new Date().getTime(),
-		nback: gameParams.nBack,
-		score: 0,
-		trail: []
-	});
-	var currentPosition = document.getElementById("game").childNodes[0];
-	currentPosition.style.backgroundImage = 'none';
-
-	gameParams.streaking = true;
-	gameParams.start = setInterval(function(){ displayRound() }, gameParams.stimuliShow); // starts engine, runs it every 2 seconds
-	console.log("Game Started with id " + gameParams.start);
-}
-
-
-function clickTrack (ev) {
-    switch (ev.target.id) {
-      case "btn_match":
-      	if (gameParams.start != null && playerParams.result[0].trail.length >= gameParams.nBack && playerParams.result[0].trail[0] === playerParams.result[0].trail[gameParams.nBack] && !gameParams.streaking) {
-      		playerParams.result[0].score++;
-      		gameParams.streaking = true;
-      		document.getElementById("game").childNodes[0].innerHTML = playerParams.result[0].score;
-      		console.log("score!");
-      	} else {
-      		gameOver();
-      	}
-      break;      
-    }
- }
 
 // D3 funktion som generar och printar ut en line chart baserat på resultat
 function initChart() {
@@ -290,19 +316,7 @@ function initChart() {
 		.attr('fill', 'none');
 }
 
-function loadGame() {
-	// Load and display splash screen for 3 seconds and/or
-	// Handle asset loading and progress bar
-	// 
-	splash.innerHTML = "<div class='middle'><h1>Loading...</h1></div>";
 
-	setTimeout(loadMenu, 3000);
-
-	function loadMenu() {
-		splash.innerHTML = "";		
-		mainMenu();
-	}
-}
 
 function mainMenu() {
 	document.addEventListener('click', menuTrack, false);
@@ -340,10 +354,18 @@ function showProfile() {
     }
 }
 
-function prepareGame() {
-	document.addEventListener('click', clickTrack, false);
-    drawBoard();      	
+// En UI funktion som visar val av nBack
+//
+//
+function showConfig () {
+	var cells = "";
+	for (i=2 ; i<=gameConfig.nBack ; i++) {
+		cells += "<div id='" + i + " back' class='nback_select'>"+i+"</div>";
+	}
+	settings.innerHTML = cells;	
 }
+
+
 
 ////////////////////////////////////////////////////////////////
 // The below code is an attempt to collect average score per day
