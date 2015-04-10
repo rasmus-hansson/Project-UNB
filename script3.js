@@ -41,30 +41,39 @@ var gameParams = {
 	start: undefined			// Konstig workaround för att få setInterval och clear att funka
 };
 
+// Den här funktionen körs bara vid start av appen
+//
+//
+function splashScreen() {
+	// Load and display splash screen for 3 seconds and/or
+	// Handle asset loading and progress bar
+	// 
+	splash.innerHTML = "<div class='middle'><h1>Loading...</h1></div>";
 
+	setTimeout(loadMenu, 3000);
 
-
-function prepareGame() {
-	document.addEventListener('click', clickTrack, false);
-    drawBoard();      	
+	function loadMenu() {
+		splash.innerHTML = "";		
+		mainMenu();
+	}
 }
 
-// En UI funktion som skapar spelplanen och startar spelet
-// (loopar helt i önödan just nu)
-//
-//
-function drawBoard () {
+
+// Ritar upp spelplanen, förbereder spelarens input och kallar på startTimer
+function prepareGame() {
+	document.addEventListener('click', clickTrack, false);
+
 	var cells = "";
 	for (i=0 ; i<gameParams.boardSize ; i++) {
 		cells += "<div id='stimtrack' class='cell'></div>";
 	}
-	game.innerHTML = cells;	
-	game.innerHTML += "<br/><br/><div class='nav'><button class='btn' id='btn_match'>+</button></div>";
-	startTimer(3,stimtrack);		
+	game.innerHTML = cells;
+	game.innerHTML += "<br/><br/><div class='nav'><button class='btn_match' id='btn_match'>+</button></div>";
+	startTimer(3,stimtrack);
 }
 
 
-// Start Timer visar en nedräkning med 800ms interval
+// Start Timer visar en nedräkning innan spelet kickar igång
 //
 // Parameters
 // Duration: Hur många sekunder som ska räknas ned
@@ -87,9 +96,8 @@ function startTimer(duration, display) {
 }
 
 
-
-
 function startGame () {
+
 	playerParams.result.unshift({
 		player: playerParams.name,
 		game: playerParams.result.length,
@@ -191,8 +199,8 @@ function gameOver () {
 	game_over.innerHTML += "<h1 style='color: #fff;'>Game Over</h1><br/><br/>";
 	game_over.innerHTML += "<h2 style='color: #fff;'>Score " + playerParams.result[0].score + "</h2><br/><br/>";
 	game_over.innerHTML += "<h2 style='color: #fff;'>High Score " + highScore + "</h2><br/><br/>";
-	game_over.innerHTML += "<button class='btn' id='btn_restart'>Restart</button><br/><br/>";
-	game_over.innerHTML += "<button class='btn' id='btn_menu'>Menu</button></div>";
+	game_over.innerHTML += "<h1 class='btn' id='btn_restart'>Restart</h1><br/><br/>";
+	game_over.innerHTML += "<h1 class='btn' id='btn_menu'>Menu</h1></div>";
 	
 	var currentPosition = document.getElementById("game").childNodes[0];	
 	currentPosition.style.backgroundColor = '#ddd';
@@ -410,7 +418,7 @@ function showConfig () {
 
 
 // Start the game
-loadGame();
+splashScreen();
 
 
 
