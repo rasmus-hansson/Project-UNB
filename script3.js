@@ -329,9 +329,22 @@ function initChart() {
 
 function mainMenu() {
 	document.addEventListener('click', menuTrack, false);
-	menu.innerHTML = "<div class='middle'><button class='btn' id='btn_start'>Play</button>";
-	menu.innerHTML += "<br/><br/><button class='btn' id='btn_profile'>Profile</button>";
-	menu.innerHTML += "<br/><br/><button class='btn' id='btn_stats'>Stats</button></div>";
+
+	var htmlContent = "<div class='middle footerButtonsWrapper'><div id='addvisible' class='FooterButtons'>";
+	htmlContent += "<button class='btn buttonInoutWrapper addButtonWrapper' id='btn_start'>Play</button>";
+	htmlContent += "<button class='btn buttonInoutWrapper' id='btn_profile'>Profile</button>";
+	htmlContent += "<button class='btn buttonInoutWrapper' id='btn_stats'>Stats</button>";
+	htmlContent += "</div></div>";
+
+	menu.innerHTML = htmlContent;
+	
+
+	setTimeout(animIcons, 100);
+
+	function animIcons() {
+		addvisible.className = addvisible.className + ' visible';
+	}
+	
 
 	function menuTrack (ev) {
     switch (ev.target.id) {

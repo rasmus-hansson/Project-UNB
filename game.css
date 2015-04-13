@@ -37,6 +37,13 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
+.btn {
+	font-size: 24px;
+	text-align: center;
+	background: none;
+	border: none;
+}
+
 .avatar {
 	width: 100px;
 	height: 100px;
@@ -44,6 +51,36 @@ h1 {
 	border: 2px solid #333;
 	background-color: transparent;
 }
+
+
+
+.footerButtonsWrapper {
+    bottom: 14px;
+    position: fixed;
+    right: 14px;
+    z-index: 680;
+    transform: translateZ(0px);
+}
+
+.FooterButtons .buttonInoutWrapper {
+    opacity: 0;
+    transform: translateY(200px);
+}
+
+.FooterButtons .buttonInoutWrapper.addButtonWrapper {
+    animation-delay: 100ms;
+    transition-delay: 100ms;
+    margin-bottom: 8px;
+}
+
+.FooterButtons.visible .buttonInoutWrapper {
+    transform: translateY(0px);
+    transition-duration: 0.85s;
+    transition-timing-function: cubic-bezier(0.19, 1.32, 0.48, 1);
+    opacity: 1;
+}
+
+
 
 
 
@@ -94,12 +131,7 @@ h1 {
 	background-color: #fff;	
 }
 
-.btn {
-	font-size: 2em;
-	text-align: center;
-	background: none;
-	border: none;
-}
+
 
 .cell.blinking {
   -webkit-animation: 1s blink step-end infinite;
