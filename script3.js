@@ -395,6 +395,7 @@ function showProfile() {
 	profile.innerHTML = closeButton();
     profile.innerHTML += "<div class='avatar' id='player_avatar'></div>";
     profile.innerHTML += "<div class='name' id='player_name'>" + playerParams.name + "</div>";
+    profile.innerHTML += "<select id='nback'><option value='1'>1</option><option value='2'>2</option><option value='3'>3</option><option value='4'>4</option><option value='5'>5</option></select>";
     
     document.addEventListener('click', profileTrack, false);
 
